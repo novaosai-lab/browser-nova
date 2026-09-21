@@ -40,3 +40,12 @@ npm run dist:mac:universal  # local Apple Silicon + Intel DMG + ZIP
 หากใช้หน้า fixture ให้รัน `npm run build:main` และ `npm run test:fixture` แยก terminal ก่อนเปิด `http://127.0.0.1:8080` ชุด `npm test` เริ่ม fixture เอง จึงต้องไม่มี process อื่นใช้พอร์ต 8080 ขณะทดสอบ
 
 โครงการยังอยู่ในช่วงพัฒนา ดูข้อจำกัดเดิมด้าน inspection, AI automation และ design extraction ใน [REVIEW.md](REVIEW.md) การเพิ่ม packaging และ updater ไม่ได้แก้ข้อจำกัดทั้งหมดนั้น
+
+## เอกสารและการส่งงาน
+
+- [IMPROVEMENTS.md](IMPROVEMENTS.md) — ประวัติการเปลี่ยนแปลง ผลตรวจ และงานที่ยังเหลือ
+- [SUMMARY_ANTIGRAVITY.md](SUMMARY_ANTIGRAVITY.md) — สถานะและขอบเขตที่ส่งมอบล่าสุด
+- [RELEASE.md](RELEASE.md) — build, signing, notarization และการออกเวอร์ชันใหม่
+- [AGENTS.md](AGENTS.md) — กติกาการทำงานของโปรเจกต์
+
+ตามคำสั่งผู้ใช้ หลังเปลี่ยนแปลงงานต้องอัปเดต Markdown ที่เกี่ยวข้อง ตรวจตามความเหมาะสม แล้ว commit/push ขึ้น GitHub และยืนยันว่า sync สำเร็จ การแก้เอกสารอย่างเดียวไม่ต้องออก application release ใหม่

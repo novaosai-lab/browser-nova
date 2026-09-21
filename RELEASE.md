@@ -4,6 +4,10 @@
 
 เตรียม DMG/ZIP, app icon, Universal build, update controller, Settings UI, native update menu และ GitHub Actions แล้ว
 
+เผยแพร่ [v0.1.0-preview.1](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.1.0-preview.1) เมื่อ 21 กันยายน 2026 พร้อม DMG/ZIP/blockmap สำหรับ arm64 และ Universal รวม 8 ไฟล์ และ `SHA256SUMS` ตรวจ digest บน GitHub ตรงกับไฟล์ในเครื่องแล้ว ติดตั้งและเปิด Universal ใน Applications บน Apple Silicon แล้ว; ยังไม่ได้ทดสอบรันบน Intel จริง
+
+ผล CI สำหรับโค้ด release: [Test and build macOS ที่ commit `35e3035`](https://github.com/novaosai-lab/browser-nova/actions/runs/35611237484) ผ่าน หลังแก้งานให้ปรับเอกสารและ push source ตาม [AGENTS.md](AGENTS.md); ขั้นตอนเผยแพร่ binary release อยู่ด้านล่าง
+
 Local preview ใช้ ad-hoc signing และตั้ง `updatesEnabled: false` โดยเจตนา เพราะไม่มี Developer ID Application และ Apple notarization credentials ในเครื่องนี้ ไม่มี feed ปลอมหรือ GitHub token ฝังในแอป
 
 ยังไม่ได้ทดสอบการอัปเดตจริงระหว่าง signed releases สองเวอร์ชัน ต้องมีใบรับรองและเผยแพร่ release จริงก่อน การผ่าน unit tests ไม่ได้ยืนยันว่า Squirrel.Mac ติดตั้งข้ามเวอร์ชันสำเร็จ

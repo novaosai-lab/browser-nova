@@ -2,6 +2,10 @@
 
 เอกสารนี้สรุปการแก้ไขและปรับปรุงที่ทำกับโปรเจกต์ Browser Nova จากการรีวิวโค้ดด้านความปลอดภัยและความถูกต้อง
 
+**อัปเดตล่าสุด: 21 กันยายน 2026** — เผยแพร่ [macOS Preview 0.1.0](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.1.0-preview.1) แล้ว มี build สำหรับ Apple Silicon และ Universal รวม Intel พร้อมโค้ด updater และ GitHub Actions ส่วนการอัปเดตจริงระหว่าง signed releases ยังรอ Developer ID, notarization และการทดสอบตาม [RELEASE.md](RELEASE.md)
+
+ผลทดสอบโค้ดล่าสุดก่อนการปรับเอกสาร: unit 35 รายการ + smoke 19 รายการ + updater/config 10 รายการ = **64 ผ่าน** พร้อม typecheck/build และ [GitHub Actions ที่ commit `35e3035`](https://github.com/novaosai-lab/browser-nova/actions/runs/35611237484) ผ่าน รายละเอียดรอบเก่าด้านล่างเป็นประวัติ ณ เวลานั้น ไม่ใช่สถานะล่าสุดทั้งหมด
+
 ---
 
 ## รอบที่ 1 — แก้ไขจากการรีวิว (5 รายการ)
@@ -70,7 +74,7 @@
 
 ---
 
-## ผลการตรวจสอบ
+## ผลการตรวจสอบเดิมหลังรอบที่ 2
 
 | การตรวจสอบ | ผล |
 |---|---|
@@ -80,7 +84,7 @@
 | Navigation/security smoke tests | ✅ ผ่าน |
 | e2e smoke test (fixture server) | ⚠️ รันในสภาพแวดล้อม sandbox ไม่ได้ (bind พอร์ต 127.0.0.1:8080 ถูกบล็อก — ข้อจำกัด environment ไม่เกี่ยวกับโค้ด) |
 
-> แนะนำให้รัน `npm test` บนเครื่องจริงเพื่อทดสอบ AI loop (MockAdapter) ครบวงจรกับ fixture server
+> Smoke tests ชุดนี้ใช้ MockAdapter และข้อมูล observation จำลอง ไม่ใช่การทดสอบ AI ควบคุม Electron ครบวงจร ต่อมารันบนเครื่องจริงแล้วผ่าน 19 รายการโดยไม่มีข้อจำกัด bind พอร์ต
 
 ---
 
@@ -109,14 +113,49 @@
 
 ---
 
-## รายการที่ยังไม่ได้ทำ (ข้อเสนอแนะเพิ่มเติม)
+## รอบที่ 4 — แก้การเปิดแอป/Enter และส่งมอบ macOS Preview
+
+### การเปิดแอปและ navigation
+
+- แก้ main process แบบ ESM ให้คำนวณ directory จาก `import.meta.url` ทำให้เปิดแอปจริงได้
+- ให้ main process เป็นเจ้าของ `TabState` ทั้งรายการแท็บและ `activeTabId`; renderer รับ state snapshot/event ร่วมกัน แก้กด Enter แล้วไม่ไปเว็บเมื่อแท็บแรกถูกสร้างหลัง renderer mount
+- ป้องกัน snapshot เก่าทับ state ใหม่ และเพิ่ม regression checks สำหรับการสร้าง/สลับ/ปิดแท็บและ renderer reload
+- ตรวจใน packaged app แล้วว่าเปิด Google และ HTTP fixture ผ่านแถบ URL ได้
+
+### macOS packaging และ lifecycle
+
+- เพิ่ม `electron-builder`, ไอคอนแอป, DMG/ZIP/blockmap และ `SHA256SUMS` พร้อมคำสั่ง `dist:mac`, `dist:mac:universal`, `release:mac`
+- สร้างทั้ง arm64 และ Universal; ตรวจว่า Universal มี `arm64` และ `x86_64`, ตรวจ ad-hoc signature และความสมบูรณ์ของ DMG
+- ติดตั้งและเปิด Universal ที่ `/Applications/Browser Nova.app` บน Apple Silicon แล้ว ยังไม่ได้รันบนเครื่อง Intel
+- Packaged app เริ่มจาก `about:blank` ไม่ต้องใช้ fixture/Vite; ใช้ profile คงที่ใน `~/Library/Application Support/browser-nova`
+- เพิ่ม single-instance lock; macOS ปิดหน้าต่างแล้วซ่อนไว้เพื่อเปิดกลับโดยใช้ IPC เดิม; Local API เลือกพอร์ตว่างบน loopback และให้ CLI อ่านจาก `local-server.json`
+
+### Updater และ GitHub
+
+- เพิ่ม `electron-updater`, state machine, เมนู **Check for Updates…** และสถานะ/ความคืบหน้าใน Settings
+- เตรียมตรวจเวอร์ชันเมื่อเปิดแอปและทุก 6 ชั่วโมงใน signed release, ให้เลือกดาวน์โหลด และยืนยันก่อนรีสตาร์ตติดตั้ง
+- ปิด downgrade/prerelease/การติดตั้งเองตอน quit; รองรับ error/retry และป้องกันคำขอซ้ำ; จำกัด update IPC ให้ shell main frame
+- เตรียม production build ที่ตรวจ signing/notarization credentials ก่อน build และใช้ GitHub HTTPS feed โดยไม่ฝัง token ในแอป
+- สร้าง [repository public](https://github.com/novaosai-lab/browser-nova), workflow CI และ workflow signed release ที่สร้าง draft release
+- เผยแพร่ tag `v0.1.0-preview.1` พร้อมไฟล์ 8 รายการและ `SHA256SUMS`; ตรวจ digest ของไฟล์ทั้ง 8 บน GitHub ตรงกับเครื่องแล้ว
+- **Preview ยังไม่เปิด auto-update installation และยังไม่ notarize กับ Apple** ต้องติดตั้ง signed release แรกด้วยตนเอง และทดสอบ update ระหว่าง signed releases ก่อนยืนยันว่าใช้งานจริงครบวงจร
+
+## รอบที่ 5 — อัปเดตเอกสารและกติกา GitHub
+
+- ปรับ `SUMMARY_ANTIGRAVITY.md` ให้สะท้อน Preview และขอบเขตการทดสอบจริง แทนการอ้างว่าครบตามแผน 100%
+- ปรับรายการ backlog และสถานะหลังรีวิวให้แยกงานที่แก้แล้วกับข้อจำกัดที่ยังเหลือ
+- เพิ่ม [AGENTS.md](AGENTS.md): หลังเปลี่ยนงานต้องอัปเดต Markdown ที่เกี่ยวข้อง ตรวจตามความเหมาะสม commit และ push GitHub พร้อมยืนยันผล ไม่ต้องถามซ้ำสำหรับการ push งานปกติ
+- รอบนี้แก้เฉพาะเอกสาร ตรวจ diff และลิงก์ภายใน; จำนวน 64 tests ด้านบนอ้างอิงผลการทดสอบโค้ดรอบก่อน
+
+## รายการที่ยังต้องทำ
 
 - Renderer CSP (Content-Security-Policy)
 - `will-download` handling
 - เก็บ API key ด้วย `safeStorage.encryptString`
 - Structured logging
-- GitHub Actions CI pipeline
-- Packaging / auto-update
+- Developer ID Application, notarization secrets และทดสอบการอัปเดตจริงระหว่าง signed releases สองเวอร์ชัน
+- รัน Universal build บนเครื่อง Intel จริง
+- แก้ข้อจำกัด AI/inspection/automation/design export ที่ยังเปิดอยู่ใน [REVIEW.md](REVIEW.md)
 
 ---
 
