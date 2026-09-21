@@ -11,12 +11,13 @@ Desktop browser สำหรับเปิด HTTP/HTTPS, ตรวจ DOM/Cons
 - เปิด DMG แล้วลาก **Browser Nova.app** ไปที่ **Applications**
 - macOS 11 หรือใหม่กว่า สำหรับ Electron 34 ที่ใช้ใน build นี้
 
-รุ่น 0.1.0 preview เป็น build สำหรับทดสอบ ลงนามแบบ ad-hoc ยังไม่ได้ notarize กับ Apple และยังไม่เปิดอัปเดตอัตโนมัติ ต้องติดตั้ง signed release แรกด้วยตนเองเมื่อพร้อม รุ่น signed ต่อไปจะตรวจสอบผ่าน GitHub Releases และให้ยืนยันก่อนติดตั้ง ดู [RELEASE.md](RELEASE.md)
+รุ่น 0.1.1 preview เป็น build สำหรับทดสอบ ลงนามแบบ ad-hoc ยังไม่ได้ notarize กับ Apple และยังไม่เปิดอัปเดตอัตโนมัติ ต้องติดตั้ง signed release แรกด้วยตนเองเมื่อพร้อม รุ่น signed ต่อไปจะตรวจสอบผ่าน GitHub Releases และให้ยืนยันก่อนติดตั้ง ดู [RELEASE.md](RELEASE.md)
 
 ## ใช้งาน
 
 - พิมพ์ URL แล้ว Enter; URL `http://` ยังคงใช้ HTTP เว้นแต่เว็บไซต์/HSTS บังคับเปลี่ยนเอง
 - `Cmd+T` เปิดแท็บ, `Cmd+L` ไปแถบที่อยู่, `Cmd+R` โหลดใหม่
+- ลากพื้นที่ว่างบนแถบแท็บ หรือมุมขวาสุดของแถบแท็บ เพื่อย้ายหน้าต่าง
 - Settings ใช้ตั้ง AI provider/API key และดูสถานะอัปเดต
 - เมนู **Browser Nova → Check for Updates…** ใช้ตรวจเวอร์ชันใหม่
 

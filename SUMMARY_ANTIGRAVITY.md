@@ -3,21 +3,22 @@
 
 **โปรเจกต์:** Browser Nova — เดสก์ท็อปเบราว์เซอร์สำหรับ HTTP, ตรวจสอบเว็บ (DOM/CSS/Console/Network), ระบบ Automation และ AI Assistant
 **วันที่จัดทำ:** 21 กันยายน 2026
-**สถานะล่าสุด:** ส่งมอบ macOS Preview 0.1.0; typecheck/build และ unit/smoke/updater checks ผ่าน 64 รายการ แต่ยังมีข้อจำกัดตาม [REVIEW.md](REVIEW.md) และยังไม่ได้ตรวจ signed auto-update ครบวงจร
+**สถานะล่าสุด:** ส่งมอบ macOS Preview 0.1.1 พร้อมแก้พื้นที่ลากหน้าต่าง; typecheck/build และ unit/smoke/updater checks ผ่าน 64 รายการ แต่ยังมีข้อจำกัดตาม [REVIEW.md](REVIEW.md) และยังไม่ได้ตรวจ signed auto-update ครบวงจร
 **ผู้สร้าง (Created By):** Antigravity
 
-**ปรับปรุงสถานะล่าสุด:** 21 กันยายน 2026 โดย Codex หลังแก้ navigation, เพิ่ม macOS packaging/updater และเผยแพร่ GitHub
+**ปรับปรุงสถานะล่าสุด:** 21 กันยายน 2026 โดย Codex หลังแก้พื้นที่ลากหน้าต่างและเพิ่มเวอร์ชันเป็น 0.1.1
 
 ## สถานะส่งมอบล่าสุด
 
 | รายการ | สถานะ |
 | --- | --- |
 | Repository | [novaosai-lab/browser-nova](https://github.com/novaosai-lab/browser-nova) — public |
-| macOS Preview | [v0.1.0-preview.1](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.1.0-preview.1) — DMG/ZIP สำหรับ arm64 และ Universal พร้อม blockmap/SHA256SUMS |
+| macOS Preview | [v0.1.1-preview.1](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.1.1-preview.1) — DMG/ZIP สำหรับ arm64 และ Universal พร้อม blockmap/SHA256SUMS |
 | แอปที่ติดตั้ง | `/Applications/Browser Nova.app` — เปิด Universal บน Apple Silicon แล้ว |
 | เปิดเว็บ | ตรวจ packaged arm64 app ว่า Enter ไป Google และ HTTP fixture ได้ |
+| ลากหน้าต่าง | แก้ native drag region ของพื้นที่ว่างบนแถบแท็บ และเพิ่มพื้นที่ด้านขวา 72 px; ยังรอยืนยันการลากด้วยเมาส์จริง ดูรอบที่ 6 ใน [IMPROVEMENTS.md](IMPROVEMENTS.md) |
 | Updater | มี Settings UI/native menu และ check/download/restart flow; ปิด installation ใน Preview ที่ยังไม่ notarize |
-| CI | [Test and build macOS](https://github.com/novaosai-lab/browser-nova/actions/runs/35611237484) ที่ commit `35e3035` ผ่าน |
+| CI | [Test and build macOS — ผลตาม commit](https://github.com/novaosai-lab/browser-nova/actions/workflows/ci.yml) |
 | Signed release | มี workflow และคู่มือแล้ว; ยังต้องเพิ่ม Developer ID/notarization credentials และทดสอบอัปเดตสองเวอร์ชันจริง |
 | งานถัดไป | ดู [REVIEW.md](REVIEW.md) และ [RELEASE.md](RELEASE.md); ไม่ถือว่า test pass rate ยืนยันว่าทุกฟีเจอร์ในแผนสมบูรณ์ |
 
@@ -115,7 +116,7 @@
 npm test
 ```
 
-ผลทดสอบโค้ดล่าสุด ณ commit `35e3035`: **64 ผ่าน / 0 ล้มเหลว**
+ผลทดสอบโค้ดรอบ 0.1.1 (`npm test`): **64 ผ่าน / 0 ล้มเหลว**
 
 | ชุดตรวจ | ผลและขอบเขต |
 | --- | --- |
@@ -123,10 +124,10 @@ npm test
 | Unit checks | 35 — URL normalization/search, security status, budget และ tab state synchronization |
 | Smoke checks | 19 — navigation, fixture HTTP และการตัดสินใจของ MockAdapter |
 | Updater / release config | 10 — state transitions, gating, retry, concurrent requests และ build/feed config |
-| Manual packaged app | เปิดแอป, Enter ไป Google/HTTP fixture, Settings และ native update dialog |
+| Manual app | รอบก่อน: เปิด packaged app, Enter ไป Google/HTTP fixture, Settings และ native update dialog; รอบ 0.1.1: ตรวจเพิ่ม/เลือก/ปิดแท็บใน Electron |
 | macOS artifact | ตรวจ signature/DMG, Universal มีทั้ง arm64/x86_64 และ digest ของไฟล์บน GitHub ตรงกับเครื่อง |
 
-Smoke tests ใช้ MockAdapter และ observation จำลอง ไม่ใช่ live AI ควบคุม Electron ครบวงจร Updater tests ใช้ fake driver จึงไม่ยืนยันการติดตั้งระหว่าง signed releases และยังไม่ได้ทดสอบรันบนเครื่อง Intel จริง รอบปรับเอกสารนี้ไม่ได้รันชุดทดสอบแอปซ้ำบนเครื่อง; CI รันตาม workflow เมื่อ push
+Smoke tests ใช้ MockAdapter และ observation จำลอง ไม่ใช่ live AI ควบคุม Electron ครบวงจร Updater tests ใช้ fake driver จึงไม่ยืนยันการติดตั้งระหว่าง signed releases และยังไม่ได้ทดสอบรันบนเครื่อง Intel จริง รอบ 0.1.1 รันชุดทดสอบบนเครื่องซ้ำแล้ว; การลากผ่านเครื่องมือ UI ยังยืนยัน native window movement ไม่ได้ จึงแยกเป็นรายการรอตรวจด้วยเมาส์จริง
 
 ---
 

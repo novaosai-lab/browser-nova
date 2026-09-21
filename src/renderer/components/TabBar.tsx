@@ -79,6 +79,8 @@ export const TabBar: React.FC<TabBarProps> = ({
       >
         <FlaskConical size={14} />
       </button>
+
+      <div className="window-drag-area" aria-hidden="true" />
     </div>
   );
 };

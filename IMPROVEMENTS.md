@@ -2,9 +2,9 @@
 
 เอกสารนี้สรุปการแก้ไขและปรับปรุงที่ทำกับโปรเจกต์ Browser Nova จากการรีวิวโค้ดด้านความปลอดภัยและความถูกต้อง
 
-**อัปเดตล่าสุด: 21 กันยายน 2026** — เผยแพร่ [macOS Preview 0.1.0](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.1.0-preview.1) แล้ว มี build สำหรับ Apple Silicon และ Universal รวม Intel พร้อมโค้ด updater และ GitHub Actions ส่วนการอัปเดตจริงระหว่าง signed releases ยังรอ Developer ID, notarization และการทดสอบตาม [RELEASE.md](RELEASE.md)
+**อัปเดตล่าสุด: 21 กันยายน 2026** — แก้พื้นที่ลากหน้าต่างใน [macOS Preview 0.1.1](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.1.1-preview.1) มี build สำหรับ Apple Silicon และ Universal รวม Intel พร้อมโค้ด updater และ GitHub Actions ส่วนการอัปเดตจริงระหว่าง signed releases ยังรอ Developer ID, notarization และการทดสอบตาม [RELEASE.md](RELEASE.md)
 
-ผลทดสอบโค้ดล่าสุดก่อนการปรับเอกสาร: unit 35 รายการ + smoke 19 รายการ + updater/config 10 รายการ = **64 ผ่าน** พร้อม typecheck/build และ [GitHub Actions ที่ commit `35e3035`](https://github.com/novaosai-lab/browser-nova/actions/runs/35611237484) ผ่าน รายละเอียดรอบเก่าด้านล่างเป็นประวัติ ณ เวลานั้น ไม่ใช่สถานะล่าสุดทั้งหมด
+ผลทดสอบรอบ 0.1.1: `npm test` ผ่าน unit 35 รายการ + smoke 19 รายการ + updater/config 10 รายการ = **64 ผ่าน** พร้อม typecheck/build ดู CI ของแต่ละ commit ที่ [GitHub Actions](https://github.com/novaosai-lab/browser-nova/actions/workflows/ci.yml) รายละเอียดรอบเก่าด้านล่างเป็นประวัติ ณ เวลานั้น ไม่ใช่สถานะล่าสุดทั้งหมด
 
 ---
 
@@ -146,6 +146,23 @@
 - ปรับรายการ backlog และสถานะหลังรีวิวให้แยกงานที่แก้แล้วกับข้อจำกัดที่ยังเหลือ
 - เพิ่ม [AGENTS.md](AGENTS.md): หลังเปลี่ยนงานต้องอัปเดต Markdown ที่เกี่ยวข้อง ตรวจตามความเหมาะสม commit และ push GitHub พร้อมยืนยันผล ไม่ต้องถามซ้ำสำหรับการ push งานปกติ
 - รอบนี้แก้เฉพาะเอกสาร ตรวจ diff และลิงก์ภายใน; จำนวน 64 tests ด้านบนอ้างอิงผลการทดสอบโค้ดรอบก่อน
+
+## รอบที่ 6 — แก้พื้นที่ลากหน้าต่าง macOS (0.1.1)
+
+**อาการ:** ผู้ใช้ลากตัวหน้าต่างแอปเพื่อย้ายตำแหน่งไม่ได้
+
+**สาเหตุในโค้ด:** `.tabs-list` ใช้ `flex: 1` แต่กำหนด `-webkit-app-region: no-drag` ทำให้พื้นที่ว่างเกือบทั้งแถบหัวหน้าต่างไม่รับการลาก
+
+**การแก้ไข:**
+
+- ให้พื้นที่ว่างใน `.tabs-list` เป็น native drag region และกำหนด `no-drag` เฉพาะแท็บ/ปุ่มที่ต้องคลิก
+- เพิ่มพื้นที่จับลากด้านขวา 72 px ที่ไม่หดตามจำนวนแท็บ พร้อม `min-width: 0` ให้รายการแท็บเลื่อนภายในได้เมื่อเต็ม
+- เพิ่มเวอร์ชันเป็น 0.1.1 และสร้าง macOS arm64/Universal preview ใหม่
+- วิธีใช้: ลากบริเวณว่างบนแถบแท็บ หรือมุมขวาสุดของแถบแท็บ เพื่อย้ายหน้าต่าง
+
+**การตรวจ:** `npm test` ผ่าน 64 รายการ; renderer/main build ผ่าน; ตรวจใน Electron ว่าปุ่มเพิ่มแท็บ การเลือกแท็บเดิม และปุ่มปิดแท็บยังทำงาน ตรวจ signature และ DMG ทั้งสองแบบผ่าน; Universal มี arm64/x86_64; ติดตั้งและเปิด 0.1.1 จาก Applications บน Apple Silicon แล้ว
+
+**ข้อจำกัดการตรวจ:** การลากผ่านเครื่องมือควบคุม UI ยังไม่แสดงการเปลี่ยนตำแหน่งหน้าต่างอย่างยืนยันได้ และเกิดเช่นเดียวกันกับหน้าต่างมาตรฐานที่ใช้เป็นตัวเทียบ จึงยังต้องตรวจการลากด้วยเมาส์จริงหลังติดตั้ง ไม่ถือว่า unit/smoke tests เป็นหลักฐานยืนยัน native window drag หรือการรันบน Intel
 
 ## รายการที่ยังต้องทำ
 

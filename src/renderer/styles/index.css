@@ -53,9 +53,11 @@ body {
   align-items: center;
   gap: 4px;
   flex: 1;
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
-  -webkit-app-region: no-drag;
+  /* Empty tab-strip space must remain a native window drag target. */
+  -webkit-app-region: drag;
 }
 
 .tabs-list::-webkit-scrollbar {
@@ -63,6 +65,8 @@ body {
 }
 
 .tab-item {
+  /* Only the interactive tabs are excluded from the native drag region. */
+  -webkit-app-region: no-drag;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -123,12 +127,20 @@ body {
   justify-content: center;
   width: 28px;
   height: 28px;
+  flex-shrink: 0;
   border-radius: var(--radius-sm);
   background: transparent;
   border: none;
   color: var(--text-secondary);
   cursor: pointer;
   -webkit-app-region: no-drag;
+}
+
+.window-drag-area {
+  /* Keep a usable drag target even when the tab strip is full/scrolling. */
+  flex: 0 0 72px;
+  align-self: stretch;
+  -webkit-app-region: drag;
 }
 
 .new-tab-btn:hover {
