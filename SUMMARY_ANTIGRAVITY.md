@@ -16,7 +16,7 @@
 | macOS Preview | [v0.1.1-preview.1](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.1.1-preview.1) — DMG/ZIP สำหรับ arm64 และ Universal พร้อม blockmap/SHA256SUMS |
 | แอปที่ติดตั้ง | `/Applications/Browser Nova.app` — เปิด Universal บน Apple Silicon แล้ว |
 | เปิดเว็บ | ตรวจ packaged arm64 app ว่า Enter ไป Google และ HTTP fixture ได้ |
-| ลากหน้าต่าง | แก้ native drag region ของพื้นที่ว่างบนแถบแท็บ และเพิ่มพื้นที่ด้านขวา 72 px; ยังรอยืนยันการลากด้วยเมาส์จริง ดูรอบที่ 6 ใน [IMPROVEMENTS.md](IMPROVEMENTS.md) |
+| ลากหน้าต่าง | แก้ native drag region ของพื้นที่ว่างบนแถบแท็บ และเพิ่มพื้นที่ด้านขวา 72 px; ผู้ใช้ยืนยันหลังติดตั้ง 0.1.1 ว่าลากย้ายหน้าต่างได้แล้ว ดูรอบที่ 6 ใน [IMPROVEMENTS.md](IMPROVEMENTS.md) |
 | Updater | มี Settings UI/native menu และ check/download/restart flow; ปิด installation ใน Preview ที่ยังไม่ notarize |
 | CI | [Test and build macOS — ผลตาม commit](https://github.com/novaosai-lab/browser-nova/actions/workflows/ci.yml) |
 | Signed release | มี workflow และคู่มือแล้ว; ยังต้องเพิ่ม Developer ID/notarization credentials และทดสอบอัปเดตสองเวอร์ชันจริง |
@@ -124,10 +124,10 @@ npm test
 | Unit checks | 35 — URL normalization/search, security status, budget และ tab state synchronization |
 | Smoke checks | 19 — navigation, fixture HTTP และการตัดสินใจของ MockAdapter |
 | Updater / release config | 10 — state transitions, gating, retry, concurrent requests และ build/feed config |
-| Manual app | รอบก่อน: เปิด packaged app, Enter ไป Google/HTTP fixture, Settings และ native update dialog; รอบ 0.1.1: ตรวจเพิ่ม/เลือก/ปิดแท็บใน Electron |
+| Manual app | รอบก่อน: เปิด packaged app, Enter ไป Google/HTTP fixture, Settings และ native update dialog; รอบ 0.1.1: ตรวจเพิ่ม/เลือก/ปิดแท็บใน Electron, เปิด packaged app และผู้ใช้ยืนยันการลากหน้าต่าง |
 | macOS artifact | ตรวจ signature/DMG, Universal มีทั้ง arm64/x86_64 และ digest ของไฟล์บน GitHub ตรงกับเครื่อง |
 
-Smoke tests ใช้ MockAdapter และ observation จำลอง ไม่ใช่ live AI ควบคุม Electron ครบวงจร Updater tests ใช้ fake driver จึงไม่ยืนยันการติดตั้งระหว่าง signed releases และยังไม่ได้ทดสอบรันบนเครื่อง Intel จริง รอบ 0.1.1 รันชุดทดสอบบนเครื่องซ้ำแล้ว; การลากผ่านเครื่องมือ UI ยังยืนยัน native window movement ไม่ได้ จึงแยกเป็นรายการรอตรวจด้วยเมาส์จริง
+Smoke tests ใช้ MockAdapter และ observation จำลอง ไม่ใช่ live AI ควบคุม Electron ครบวงจร Updater tests ใช้ fake driver จึงไม่ยืนยันการติดตั้งระหว่าง signed releases และยังไม่ได้ทดสอบรันบนเครื่อง Intel จริง รอบ 0.1.1 รันชุดทดสอบบนเครื่องซ้ำแล้ว; การลากผ่านเครื่องมือ UI ยังยืนยัน native window movement ไม่ได้ จึงใช้ผลตรวจด้วยเมาส์จริงที่ผู้ใช้ยืนยันหลังติดตั้ง 0.1.1
 
 ---
 
