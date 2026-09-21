@@ -166,15 +166,30 @@
 
 **ขอบเขตการตรวจ:** เครื่องมือควบคุม UI ไม่สามารถยืนยันการขยับหน้าต่างได้เอง จึงใช้ผลยืนยันจากผู้ใช้สำหรับ native window drag; unit/smoke tests ไม่ใช่การทดสอบลากหน้าต่าง และยังไม่ได้รันบนเครื่อง Intel จริง
 
+## รอบที่ 7 — วิเคราะห์เอกสารและจัดทำแผนยกระดับสู่ Super Agent Browser
+
+**สิ่งที่ดำเนินการ:**
+- วิเคราะห์เอกสารทางเทคนิคทั้งหมดในโปรเจกต์ ([PLAN.md](PLAN.md), [REVIEW.md](REVIEW.md), [IMPROVEMENTS.md](IMPROVEMENTS.md), [SUMMARY_ANTIGRAVITY.md](SUMMARY_ANTIGRAVITY.md))
+- สรุปจุดบกพร่องที่ต้องแก้ไขจาก [REVIEW.md](REVIEW.md) ก่อนขยายต่อ (เช่น Runtime syntax error ใน `PageObserver`, การขาด `AbortSignal` และ Deadlines, Origin Guard ข้าม Redirect/Popups, และการส่งข้อมูล Network/Console จริงให้ AI)
+- จัดทำเอกสารพิมพ์เขียว [SUPER_AGENT_ROADMAP.md](SUPER_AGENT_ROADMAP.md) กำหนด 6 เสาหลักสู่การเป็น Super Agent Browser:
+  1. **Hybrid Perception:** ผสาน Semantic Accessibility Tree (`Accessibility.getFullAXTree`) ร่วมกับ Set-of-Marks (SoM) Numbered Overlay และ Coordinate Fallback
+  2. **Cognitive Architecture & Self-Healing:** การแตกเป้าหมายย่อย (Hierarchical Goal Decomposition), ระบบตรวจจับและปิด Pop-up/Cookie Banner อัตโนมัติ และการสั่งงานข้ามหลายแท็บ (Multi-Tab)
+  3. **Memory & Skill Synthesis:** ระบบ Session-to-Skill Compiler แปลงภารกิจที่ทำสำเร็จเป็น Macro Workflow JSON สำหรับรันซ้ำได้ทันทีแบบ Zero Token
+  4. **Enterprise Security:** กำแพงกั้น Untrusted Data ป้องกัน Indirect Prompt Injection, Human-in-the-Loop Risk Checkpoints และการเข้ารหัส Key ด้วย `safeStorage`
+  5. **Super Design Lab:** AST Serializer สกัดโค้ด React + Tailwind พร้อม SVG ครบถ้วน, Asset Harvester (ZIP) และ API Reverse-Engineering
+  6. **Hybrid Multi-Model Engine:** แบ่งสถาปัตยกรรมเป็น Fast Perception Layer และ Deep Reasoning Layer
+- กำหนดแผนงานการพัฒนา 4 เฟสชัดเจนเพื่อขับเคลื่อนโปรเจกต์ต่อไป
+
 ## รายการที่ยังต้องทำ
 
+- ดำเนินการแก้ไขตาม Roadmap Phase 1 (Foundation Hardening จาก [REVIEW.md](REVIEW.md))
 - Renderer CSP (Content-Security-Policy)
 - `will-download` handling
 - เก็บ API key ด้วย `safeStorage.encryptString`
 - Structured logging
 - Developer ID Application, notarization secrets และทดสอบการอัปเดตจริงระหว่าง signed releases สองเวอร์ชัน
 - รัน Universal build บนเครื่อง Intel จริง
-- แก้ข้อจำกัด AI/inspection/automation/design export ที่ยังเปิดอยู่ใน [REVIEW.md](REVIEW.md)
+- พัฒนาฟีเจอร์ตาม [SUPER_AGENT_ROADMAP.md](SUPER_AGENT_ROADMAP.md) ในเฟสถัดไป
 
 ---
 
@@ -199,6 +214,7 @@
 
 **เพิ่ม:**
 - `tests/unit/unit-test.ts`
+- `SUPER_AGENT_ROADMAP.md`
 
 ---
 

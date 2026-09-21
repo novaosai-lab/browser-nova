@@ -46,6 +46,7 @@ npm run dist:mac:universal  # local Apple Silicon + Intel DMG + ZIP
 
 - [IMPROVEMENTS.md](IMPROVEMENTS.md) — ประวัติการเปลี่ยนแปลง ผลตรวจ และงานที่ยังเหลือ
 - [SUMMARY_ANTIGRAVITY.md](SUMMARY_ANTIGRAVITY.md) — สถานะและขอบเขตที่ส่งมอบล่าสุด
+- [SUPER_AGENT_ROADMAP.md](SUPER_AGENT_ROADMAP.md) — พิมพ์เขียวยกระดับสู่ Super Agent Browser
 - [RELEASE.md](RELEASE.md) — build, signing, notarization และการออกเวอร์ชันใหม่
 - [AGENTS.md](AGENTS.md) — กติกาการทำงานของโปรเจกต์
 

@@ -20,7 +20,7 @@
 | Updater | มี Settings UI/native menu และ check/download/restart flow; ปิด installation ใน Preview ที่ยังไม่ notarize |
 | CI | [Test and build macOS — ผลตาม commit](https://github.com/novaosai-lab/browser-nova/actions/workflows/ci.yml) |
 | Signed release | มี workflow และคู่มือแล้ว; ยังต้องเพิ่ม Developer ID/notarization credentials และทดสอบอัปเดตสองเวอร์ชันจริง |
-| งานถัดไป | ดู [REVIEW.md](REVIEW.md) และ [RELEASE.md](RELEASE.md); ไม่ถือว่า test pass rate ยืนยันว่าทุกฟีเจอร์ในแผนสมบูรณ์ |
+| งานถัดไป | แผนยกระดับสู่ Super Agent Browser ใน [SUPER_AGENT_ROADMAP.md](SUPER_AGENT_ROADMAP.md) และข้อแก้ไขทางเทคนิคตาม [REVIEW.md](REVIEW.md) / [RELEASE.md](RELEASE.md) |
 
 ทุกครั้งที่เปลี่ยนงาน ให้ปรับเอกสารและ commit/push GitHub ตาม [AGENTS.md](AGENTS.md) ประวัติการเปลี่ยนแปลงอยู่ใน [IMPROVEMENTS.md](IMPROVEMENTS.md)
 
@@ -132,7 +132,7 @@ Smoke tests ใช้ MockAdapter และ observation จำลอง ไม�
 ---
 
 ## 4. วิธีการเปิดใช้งานโปรเจกต์
-
+ 
 ```bash
 # 1. รัน Browser Nova ในโหมดพัฒนา
 npm run dev
@@ -143,6 +143,18 @@ npm run test:fixture
 # 3. หรือรันชุดทดสอบทั้งหมด
 npm test
 ```
+
+---
+
+## 5. แผนการยกระดับสู่ Super Agent Browser
+
+ได้จัดทำพิมพ์เขียวเชิงลึกใน [SUPER_AGENT_ROADMAP.md](SUPER_AGENT_ROADMAP.md) ซึ่งกำหนด 6 เสาหลักเพื่อยกระดับสู่ Super Agent Browser:
+1. **Hybrid Perception:** a11y tree (`Accessibility.getFullAXTree`) + Set-of-Marks (SoM) visual numbered overlay + Coordinate fallback
+2. **Cognitive Planning & Self-Healing:** การแตกเป้าหมายย่อย (Hierarchical Goal Decomposition), ระบบตรวจจับและกดปิด Pop-up/Cookie Banner อัตโนมัติ, และการควบคุมหลายแท็บ (Multi-Tab orchestration)
+3. **Memory & Skill Synthesis:** บันทึกงานสำเร็จเป็น Macro Workflow JSON แบบ Zero Token ในการรันซ้ำ
+4. **Enterprise Guardrails:** กำแพงกั้น Untrusted Data ป้องกัน Indirect Prompt Injection และเข้ารหัส API Keys ด้วย `safeStorage`
+5. **Super Design Lab:** AST Serializer สกัดโค้ด React + Tailwind พร้อม SVG ครบถ้วน, Asset Harvester (ZIP) และ API Reverse-Engineering
+6. **Hybrid Multi-Model:** Fast visual perception layer + Deep reasoning layer
 
 ---
 *จัดทำและส่งมอบโดย Antigravity*
