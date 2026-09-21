@@ -1,0 +1,27 @@
+export enum NovaErrorCode {
+  INVALID_URL = 'INVALID_URL',
+  NAVIGATION_FAILED = 'NAVIGATION_FAILED',
+  TIMEOUT = 'TIMEOUT',
+  ELEMENT_NOT_FOUND = 'ELEMENT_NOT_FOUND',
+  MULTIPLE_ELEMENTS_FOUND = 'MULTIPLE_ELEMENTS_FOUND',
+  ELEMENT_NOT_INTERACTABLE = 'ELEMENT_NOT_INTERACTABLE',
+  DEBUGGER_DETACHED = 'DEBUGGER_DETACHED',
+  ASSERTION_FAILED = 'ASSERTION_FAILED',
+  OUT_OF_ORIGIN = 'OUT_OF_ORIGIN',
+  BUDGET_EXCEEDED = 'BUDGET_EXCEEDED',
+  USER_CANCELLED = 'USER_CANCELLED',
+  AI_API_ERROR = 'AI_API_ERROR',
+  TAB_CLOSED = 'TAB_CLOSED',
+  ACTION_FAILED = 'ACTION_FAILED',
+}
+
+export class NovaError extends Error {
+  constructor(
+    public code: NovaErrorCode,
+    message: string,
+    public details?: Record<string, any>
+  ) {
+    super(message);
+    this.name = 'NovaError';
+  }
+}

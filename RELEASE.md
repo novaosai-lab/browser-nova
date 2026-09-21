@@ -1,0 +1,91 @@
+# macOS builds and updates
+
+## สถานะปัจจุบัน
+
+เตรียม DMG/ZIP, app icon, Universal build, update controller, Settings UI, native update menu และ GitHub Actions แล้ว
+
+Local preview ใช้ ad-hoc signing และตั้ง `updatesEnabled: false` โดยเจตนา เพราะไม่มี Developer ID Application และ Apple notarization credentials ในเครื่องนี้ ไม่มี feed ปลอมหรือ GitHub token ฝังในแอป
+
+ยังไม่ได้ทดสอบการอัปเดตจริงระหว่าง signed releases สองเวอร์ชัน ต้องมีใบรับรองและเผยแพร่ release จริงก่อน การผ่าน unit tests ไม่ได้ยืนยันว่า Squirrel.Mac ติดตั้งข้ามเวอร์ชันสำเร็จ
+
+## Build ในเครื่อง
+
+```sh
+npm ci
+npm test
+npm run dist:mac
+npm run dist:mac:universal
+```
+
+ผลลัพธ์ใน `release/local/` มี `.dmg` สำหรับติดตั้ง, `.zip` และ `.blockmap` ส่วน ZIP จะใช้เป็น update payload ใน signed releases
+
+## ตั้งค่า GitHub ครั้งแรก
+
+Repository: **novaosai-lab/browser-nova** (public)
+
+ใส่ค่าใน **Settings → Secrets and variables → Actions** ด้วยตนเอง ห้ามใส่ certificate หรือรหัสผ่านใน source code, issue, release notes หรือแชต:
+
+| Secret | ค่า |
+| --- | --- |
+| `CSC_LINK` | Developer ID Application certificate พร้อม private key ที่ export เป็น `.p12` แล้วแปลงเป็น base64 |
+| `CSC_KEY_PASSWORD` | รหัสผ่านของ `.p12` |
+| `APPLE_ID` | Apple ID สำหรับ notarization |
+| `APPLE_APP_SPECIFIC_PASSWORD` | App-specific password ที่ออกโดย Apple |
+| `APPLE_TEAM_ID` | Apple Developer Team ID |
+
+Apple Development certificate ใช้แทน Developer ID Application สำหรับ release นี้ไม่ได้ Workflow ใช้ `GITHUB_TOKEN` ของ Actions ที่จำกัดเฉพาะ repository จึงไม่ต้องเพิ่ม PAT สำหรับเผยแพร่ไฟล์
+
+CI ทุก push เข้า main ทดสอบและสร้าง local arm64 artifact ส่วน **Signed macOS release** ทำงานเมื่อ push stable tag `vX.Y.Z` หรือกด Run workflow สร้าง Universal, ลงนาม, notarize, ตรวจลายเซ็นและ ticket แล้วอัปโหลดเป็น **draft release** เพื่อให้ตรวจไฟล์ก่อน Publish ไม่อัปเดตแอปของผู้ใช้จาก draft หรือ preview
+
+## ออกเวอร์ชันใหม่
+
+1. เพิ่ม `version` ด้วย `npm version patch --no-git-tag-version` แล้ว commit ทั้ง `package.json` และ lockfile
+2. รัน tests และ push code จากนั้นสร้าง tag ให้ตรงเวอร์ชัน เช่น `v0.1.1` และ push tag
+3. รอ workflow **Signed macOS release** ผ่าน
+4. ใน draft release ตรวจว่ามี Universal `.dmg`, `.zip`, `.blockmap` และ **`latest-mac.yml`** ครบ ไฟล์ต้องมาจาก build เดียวกัน
+5. ติดตั้ง DMG และตรวจการเปิดเว็บ/Settings จากนั้น Publish release เพื่อเปิดให้ updater เห็นเวอร์ชันใหม่
+
+เก็บ artifact ของเวอร์ชันเก่าไว้เพื่อให้ differential download ทำงาน ห้ามแทนที่ไฟล์ release ที่เผยแพร่แล้ว หากพบปัญหาให้เพิ่มเวอร์ชันและออก release แก้ไข ไม่ใช้การ downgrade อัตโนมัติ
+
+## Build signed release ในเครื่อง
+
+ตั้งค่าความลับผ่าน environment ที่ปลอดภัย แล้วรัน:
+
+```sh
+npm run release:mac
+```
+
+ใช้ `CSC_NAME` ชื่อ `Developer ID Application: …` จาก Keychain แทน `CSC_LINK` ได้ Notarization รองรับ `APPLE_ID`/password/team, App Store Connect API key (`APPLE_API_KEY`, `APPLE_API_KEY_ID`, `APPLE_API_ISSUER`) หรือ `APPLE_KEYCHAIN_PROFILE` ตาม electron-builder
+
+คำสั่งนี้สร้างไฟล์ใน `release/production/` และ **ไม่อัปโหลด** โดยอัตโนมัติ ถ้าขาด signing/notarization credentials จะหยุดก่อน build ใช้ `NOVA_GITHUB_REPOSITORY=OWNER/REPO` เปลี่ยนปลายทาง หรือ `NOVA_UPDATE_URL=https://…/mac/` สำหรับ server ของตนเอง เลือกอย่างใดอย่างหนึ่ง ต้อง build signed app ใหม่เพื่อเปลี่ยนปลายทาง
+
+## พฤติกรรมการอัปเดต
+
+- ใช้ `app-update.yml` ที่ electron-builder สร้างจาก GitHub provider; หน้าเว็บตั้ง feed เองไม่ได้
+- ตรวจเมื่อเปิดแอป (หลัง 10 วินาที) และทุก 6 ชั่วโมง เฉพาะ signed release build
+- แจ้งเวอร์ชันใหม่ ให้ผู้ใช้เลือกดาวน์โหลด แสดง progress ใน Settings และ Dock
+- ตรวจ hash ของไฟล์ด้วย electron-updater และตรวจลายเซ็นบน macOS ผ่าน native updater
+- ไม่ติดตั้งเองเมื่อปิดแอป ต้องกดรีสตาร์ตและยืนยันก่อน งานที่ยังไม่ได้บันทึก/automation อาจถูกปิด
+- คง profile เดิมไว้ใน `browser-nova`; ไม่ลบ settings, cookies หรือ artifacts ระหว่าง update
+- ปัญหา network/download/install แสดง error และให้ตรวจสอบใหม่ ป้องกันการกดซ้ำระหว่างดาวน์โหลด
+- ไม่เปิด downgrade หรือ prerelease โดยอัตโนมัติ
+- เว็บที่เรียกดูยังรองรับ HTTP ส่วน binary update ใช้ GitHub HTTPS หรือ HTTPS feed เท่านั้น
+
+## ตรวจรับ updater ก่อนเปิดใช้งานจริง
+
+ใช้ repository ทดลองแยกและ Developer ID เดียวกันสำหรับทั้งสองเวอร์ชัน โดยตั้ง `NOVA_GITHUB_REPOSITORY` ตั้งแต่ build แรก:
+
+1. ติดตั้ง signed version A จาก DMG ลง Applications
+2. เผยแพร่ signed version B ที่เลขมากกว่า พร้อม ZIP/blockmap/latest-mac.yml
+3. ใน A กด Check for Updates → Download ดู progress จนพร้อมติดตั้ง
+4. กดไว้ภายหลังและออกจากแอป: ต้องยังเป็น A เพราะไม่ติดตั้งบน quit
+5. เปิดใหม่ ดาวน์โหลด/ใช้ cache แล้วกด Restart and Install: ต้องเปิดเป็น B และรักษาข้อมูล profile
+6. ทดสอบ offline, feed 404, checksum mismatch, invalid signature และกดซ้ำ โดยใช้ repo ทดลองเท่านั้น
+
+ทดสอบอัตโนมัติใน repository ครอบคลุม state transitions, error/retry, download/install gating, concurrent requests และ build config แต่ใช้ fake updater ไม่ดาวน์โหลดหรือติดตั้งจริง
+
+## อ้างอิง
+
+- [electron-builder auto-update v26](https://www.electron.build/v26/docs/features/auto-update/)
+- [macOS code signing](https://www.electron.build/v26/docs/features/code-signing/)
+- [GitHub Actions setup-node](https://github.com/actions/setup-node)

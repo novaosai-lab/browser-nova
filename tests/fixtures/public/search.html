@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>หน้าค้นหา HTTP — Browser Nova Fixture</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6; }
+    h1 { color: #0284c7; }
+    .search-box { display: flex; gap: 8px; margin: 24px 0; }
+    input { flex: 1; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; }
+    button { padding: 10px 20px; background: #0284c7; color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
+    button:hover { background: #0369a1; }
+    .result-box { margin-top: 24px; padding: 16px; border-radius: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; display: none; }
+  </style>
+</head>
+<body>
+  <a href="/">← กลับหน้าหลัก</a>
+  <h1>ค้นหาข้อมูลบนระบบ HTTP</h1>
+  <p>หน้านี้มี element ตรงตามสเปก automation: <code>[data-testid=search]</code> และ <code>[data-testid=submit]</code></p>
+
+  <div class="search-box">
+    <input type="text" data-testid="search" placeholder="พิมพ์คำค้นหา เช่น nova" autofocus />
+    <button type="button" data-testid="submit" onclick="doSearch()">ค้นหา</button>
+  </div>
+
+  <div id="resultBox" class="result-box">
+    <div style="font-weight: bold; color: #166534;">ผลการค้นหา:</div>
+    <div data-testid="result" id="resultText"></div>
+  </div>
+
+  <script>
+    function doSearch() {
+      const q = document.querySelector('[data-testid=search]').value;
+      const box = document.getElementById('resultBox');
+      const text = document.getElementById('resultText');
+      if (q.trim()) {
+        box.style.display = 'block';
+        text.innerText = 'พบข้อมูลของคำว่า ' + q + ' ในฐานข้อมูล Browser Nova เรียบร้อยแล้ว (Status: 200 OK)';
+      }
+    }
+  </script>
+</body>
+</html>

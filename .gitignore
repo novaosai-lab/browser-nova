@@ -1,0 +1,17 @@
+node_modules/
+dist/
+release/
+.DS_Store
+.env
+.env.*
+!.env.example
+*.p12
+*.p8
+*.key
+*.pem
+*.mobileprovision
+artifacts/
+test-results/
+playwright-report/
+.claude/
+build/icon.iconset/

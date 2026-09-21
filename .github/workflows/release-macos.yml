@@ -1,0 +1,72 @@
+name: Signed macOS release
+on:
+  push:
+    tags: ['v[0-9]*']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: macos-release
+  cancel-in-progress: false
+jobs:
+  release:
+    # Preview builds are explicitly manual-install releases, not update feeds.
+    if: github.event_name == 'workflow_dispatch' || !contains(github.ref_name, '-')
+    runs-on: macos-14
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm ci
+      - name: Verify version and release credentials
+        id: version
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          node -e 'require("./scripts/release-config.cjs").assertReleaseCredentials(process.env)'
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const { version } = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          if (!/^\d+\.\d+\.\d+$/.test(version)) throw new Error('Use a stable semver for the update channel');
+          const tag = `v${version}`;
+          if (process.env.GITHUB_REF_TYPE === 'tag' && process.env.GITHUB_REF_NAME !== tag) throw new Error('Tag must match package.json version');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `tag=${tag}\n`);
+          NODE
+      - run: npm test
+      - name: Build signed and notarized Universal app
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          NOVA_GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: npm run release:mac
+      - name: Verify signed app and update metadata
+        run: |
+          codesign --verify --deep --strict 'release/production/mac-universal/Browser Nova.app'
+          codesign -dv 'release/production/mac-universal/Browser Nova.app' 2>&1 | grep 'Authority=Developer ID Application:'
+          xcrun stapler validate 'release/production/mac-universal/Browser Nova.app'
+          test -s release/production/latest-mac.yml
+          test -s 'release/production/mac-universal/Browser Nova.app/Contents/Resources/app-update.yml'
+      - name: Prepare draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if gh release view "$RELEASE_TAG" --json isDraft > /tmp/nova-release.json 2>/dev/null; then
+            node -e 'if (!require("/tmp/nova-release.json").isDraft) throw new Error("Refusing to replace a published release")'
+          else
+            gh release create "$RELEASE_TAG" --draft --target "$GITHUB_SHA" --title "Browser Nova $RELEASE_TAG" --generate-notes
+          fi
+          gh release upload "$RELEASE_TAG" release/production/*.dmg release/production/*.zip release/production/*.blockmap release/production/latest-mac.yml --clobber

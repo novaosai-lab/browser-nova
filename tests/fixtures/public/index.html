@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Browser Nova Fixture Server (HTTP)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #1e293b; }
+    h1 { color: #4338ca; }
+    .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    a { color: #2563eb; text-decoration: none; font-weight: 500; }
+    a:hover { text-decoration: underline; }
+    .badge { background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Browser Nova Test Fixture <span class="badge">HTTP 127.0.0.1:8080</span></h1>
+  <p>เซิร์ฟเวอร์จำลองสำหรับทดสอบการทำงานของ Browser Nova ทั้งการเปิด HTTP, Web Inspector, Automation, และ AI Assistant</p>
+
+  <div class="card">
+    <h3>รายการหน้าทดสอบ:</h3>
+    <ul>
+      <li><a href="/search">1. หน้าค้นหา (Search Test Page)</a> — มี <code>[data-testid=search]</code>, <code>[data-testid=submit]</code> และ <code>[data-testid=result]</code></li>
+      <li><a href="/form">2. หน้าฟอร์มทดสอบ (Form Test Page)</a> — สำหรับทดสอบการกรอกข้อมูลอัตโนมัติ</li>
+      <li><a href="/table">3. หน้าตารางข้อมูลภาษาไทย (Table Test Page)</a> — สำหรับทดสอบ Table/Data Extractor</li>
+      <li><a href="/errors">4. หน้าจำลองข้อผิดพลาด (Console Errors & 404 Requests)</a> — สำหรับทดสอบ Inspector</li>
+      <li><a href="/redirect">5. หน้าทดสอบ HTTP Redirect</a> — ทดสอบการเปลี่ยนหน้าอัตโนมัติ</li>
+    </ul>
+  </div>
+</body>
+</html>
