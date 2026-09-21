@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { writeChecksums } from './write-checksums.mjs';
 
 const require = createRequire(import.meta.url);
 const { createBuildConfig } = require('./release-config.cjs');
@@ -23,5 +24,6 @@ execFileSync('npm', ['run', 'build'], { stdio: 'inherit' });
 const artifacts = await builder.build({
   targets: builder.Platform.MAC.createTarget(['dmg', 'zip'], architecture), config, publish: 'never',
 });
+await writeChecksums(config.directories.output);
 console.log(`\n${isRelease ? 'Signed release' : 'Local test build'} complete (nothing published):`);
 for (const artifact of artifacts) console.log(artifact);

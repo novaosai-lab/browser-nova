@@ -69,4 +69,4 @@ jobs:
           else
             gh release create "$RELEASE_TAG" --draft --target "$GITHUB_SHA" --title "Browser Nova $RELEASE_TAG" --generate-notes
           fi
-          gh release upload "$RELEASE_TAG" release/production/*.dmg release/production/*.zip release/production/*.blockmap release/production/latest-mac.yml --clobber
+          gh release upload "$RELEASE_TAG" release/production/*.dmg release/production/*.zip release/production/*.blockmap release/production/latest-mac.yml release/production/SHA256SUMS --clobber

@@ -33,5 +33,6 @@ jobs:
             release/local/*.dmg
             release/local/*.zip
             release/local/*.blockmap
+            release/local/SHA256SUMS
           if-no-files-found: error
           retention-days: 14
