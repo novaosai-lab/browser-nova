@@ -64,3 +64,7 @@ npm run dist:mac:universal  # local Apple Silicon + Intel DMG + ZIP
 ทดสอบ API inspector ด้วย `npm run test:network` (Electron + API จำลองบน loopback). อ้างอิง [CDP Network](https://chromedevtools.github.io/devtools-protocol/tot/Network/).
 
 Side panel: ลากขอบซ้ายเพื่อปรับความกว้าง หรือกดปุ่มขยาย/คืนขนาดด้านบน ระบบจำความกว้างไว้ ดับเบิลคลิกขอบเพื่อคืนค่าเริ่มต้น ใช้ลูกศรซ้าย/ขวาขณะ focus ขอบได้ด้วย
+
+### macOS 0.2.1 Preview — เปิดบนเครื่องอื่น
+
+ดาวน์โหลด Universal DMG และ helper ZIP จาก [0.2.1 Preview](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.2.1-preview.1). ติดตั้งแอปใน Applications แล้วทำตาม [คู่มือเปิดแอป](scripts/macos/README-OPEN-MAC.md). สคริปต์ให้ผู้ใช้เลือกเอา quarantine ออกเฉพาะแอปนี้ ไม่ใช่การ notarize และยังไม่รับประกันเครื่องที่องค์กรควบคุม

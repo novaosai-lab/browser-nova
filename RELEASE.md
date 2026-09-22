@@ -102,3 +102,9 @@ The API inspector changes are available in the working-branch CI macOS artifact 
 Local installation verified: the arm64 Network Inspector build from commit `666f44d` is installed in `/Applications/Browser Nova.app`, with the previous app backed up locally. App signature and executable/ASAR hashes match the build; the installed UI opens the Fetch/XHR inspector. This is a manual local installation, not an auto-update test.
 
 Resizable-panel local build installed on 22 September 2026. Previous app backed up as `release/backups/Browser Nova-before-resize-20260922.app`. Signature verification and installed expand/restore UI checks passed. No new public release or signed-update test.
+
+## 0.2.1 Preview distribution
+
+Publish as `v0.2.1-preview.1` (prerelease, no update feed). Use Universal DMG/ZIP/blockmaps plus `Browser-Nova-0.2.1-macOS-open-helper.zip` containing the executable helper and Thai README; hash all five assets into SHA256SUMS. Stage only this version, verify uploaded asset digests, then publish. Do not replace earlier assets.
+
+The helper is an explicit user-run per-app quarantine override, not a certificate or notarization workaround performed automatically by the app. Run via `bash` in Terminal as documented in [the helper guide](scripts/macos/README-OPEN-MAC.md). Users must trust the download; enterprise policy can still block it.

@@ -1,7 +1,7 @@
 {
   "name": "browser-nova",
-  "version": "0.2.0",
-  "description": "Browser Nova \u2014 Desktop browser for HTTP, Web Inspection, and AI Automation",
+  "version": "0.2.1",
+  "description": "Browser Nova — Desktop browser for HTTP, Web Inspection, and AI Automation",
   "main": "dist/main/index.js",
   "type": "module",
   "scripts": {

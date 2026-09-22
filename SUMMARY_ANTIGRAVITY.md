@@ -1,5 +1,14 @@
 # รายงานสรุปผลการพัฒนา Browser Nova
 
+## 0.2.1 Preview — macOS distribution helper
+
+Includes the Fetch/XHR inspector and resizable side panel. Adds `scripts/macos/Open-Browser-Nova.command` and Thai installation instructions. The helper only targets `/Applications/Browser Nova.app`, checks its identifier and ad-hoc integrity signature, requires the user to type OPEN, removes quarantine for that app, then opens it. No sudo, global Gatekeeper changes, downloads, automatic execution, or certificate claims.
+
+Validation: npm test (67), real Electron Network (12 assertions), and Extensions (18 checks); shell syntax and cancellation path checked on macOS. The helper's quarantine-removal path has not been tested on another quarantined Mac; managed-device restrictions may still apply. Intel execution and signed auto-update remain unverified. Universal preview packaging uses ad-hoc signing, not Developer ID/notarization; updates remain disabled.
+
+Distribution target: [v0.2.1-preview.1](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.2.1-preview.1), containing Universal DMG/ZIP/blockmaps, helper ZIP and SHA256SUMS.
+
+
 ## Resizable side panel — 22 September 2026
 
 Side panel (Inspect, AI, Automation, Design Lab) now supports dragging its left edge, expand/restore, and remembered width. Double-click the edge to reset to 440px; keyboard Left/Right changes width, Home resets, End expands. Width is clamped to leave 240px for the page. A ResizeObserver synchronizes native web content bounds; native content is temporarily hidden during dragging to avoid intercepting the pointer. Extension panels remain separate and unchanged.
