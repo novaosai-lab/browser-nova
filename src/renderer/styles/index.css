@@ -432,3 +432,16 @@ body {
 .extension-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .extension-error { color: #fca5a5 !important; padding: 8px; overflow-wrap: anywhere; }
 .extension-shortcuts { display: flex; max-width: 96px; overflow-x: auto; }
+
+/* API inspector: independent list and readable request/response details. */
+.api-network { display:flex; flex-direction:column; gap:8px; flex:1; min-height:0; font-size:12px; }
+.api-network > input { padding:8px; background:var(--bg-primary); color:var(--text-primary); border:1px solid var(--border-subtle); border-radius:6px; }
+.api-controls { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.api-controls label { display:flex; align-items:center; gap:4px; }
+.api-request-list { overflow:auto; max-height:38%; min-height:80px; border:1px solid var(--border-subtle); border-radius:6px; }
+.api-request { display:grid; grid-template-columns:46px 32px minmax(0,1fr) 65px; gap:6px; width:100%; text-align:left; padding:9px 6px; border:0; border-bottom:1px solid var(--border-subtle); background:transparent; color:var(--text-primary); cursor:pointer; font-size:11px; }
+.api-request:hover,.api-request.selected { background:rgba(99,102,241,.2); }
+.api-url { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.api-details { display:flex; flex-direction:column; gap:8px; flex:1; min-height:100px; overflow:auto; }
+.api-detail-url { overflow-wrap:anywhere; font-weight:600; }
+.api-details pre { margin:0; padding:10px; overflow:auto; flex:1; min-height:100px; background:rgba(0,0,0,.2); white-space:pre-wrap; overflow-wrap:anywhere; font-size:11px; user-select:text; }

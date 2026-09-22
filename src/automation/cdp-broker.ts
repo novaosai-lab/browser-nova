@@ -45,7 +45,7 @@ export class CdpBroker {
       await this.sendCommand('Runtime.enable');
       await this.sendCommand('DOM.enable');
       await this.sendCommand('CSS.enable');
-      await this.sendCommand('Network.enable');
+      await this.sendCommand('Network.enable', { maxTotalBufferSize: 8 * 1024 * 1024, maxResourceBufferSize: 256 * 1024, maxPostDataSize: 65536 });
       await this.sendCommand('Accessibility.enable');
     } catch (err: any) {
       this.attached = false;
@@ -135,72 +135,58 @@ export class CdpBroker {
       this.consoleListeners.forEach((fn) => fn(msg));
     }
 
-    // Process Network
+    // Retain requests until loadingFinished: responseReceived has headers, not the body.
+    const id = params.requestId;
     if (method === 'Network.requestWillBeSent') {
-      const reqId = params.requestId;
-      const url = params.request.url;
-      const isHttp = url.startsWith('http://');
-      // Bound the pending map so long-lived tabs with requests that never
-      // complete (streaming, aborted, or missed events) can't grow it forever.
       if (this.networkRequestsMap.size >= CdpBroker.MAX_PENDING_REQUESTS) {
-        const oldest = this.networkRequestsMap.keys().next().value;
-        if (oldest !== undefined) this.networkRequestsMap.delete(oldest);
+        this.networkRequestsMap.delete(this.networkRequestsMap.keys().next().value!);
       }
-      this.networkRequestsMap.set(reqId, {
-        id: reqId,
-        tabId: this.tabId,
-        url,
-        method: params.request.method,
-        timestamp: Date.now(),
-        isHttp,
-        status: 0,
-        failed: false,
-      });
+      const request: NetworkRequest = {
+        id, tabId: this.tabId, url: params.request.url, method: params.request.method,
+        resourceType: params.type, requestHeaders: params.request.headers,
+        postData: params.request.postData?.slice(0, 65536),
+        bodyNote: params.request.hasPostData && !params.request.postData ? 'Request payload unavailable (may include file uploads).' : undefined,
+        timestamp: Date.now(), isHttp: params.request.url.startsWith('http://'), status: 0, failed: false,
+      };
+      this.networkRequestsMap.set(id, request);
+      this.networkListeners.forEach(fn => fn({ ...request }));
     }
-
+    const request = this.networkRequestsMap.get(id) as NetworkRequest | undefined;
+    if (!request) return;
     if (method === 'Network.responseReceived') {
-      const reqId = params.requestId;
-      const existing = this.networkRequestsMap.get(reqId);
-      if (existing) {
-        const netReq: NetworkRequest = {
-          id: reqId,
-          tabId: this.tabId,
-          url: existing.url || params.response.url,
-          method: existing.method || 'GET',
-          status: params.response.status,
-          statusText: params.response.statusText,
-          mimeType: params.response.mimeType,
-          durationMs: Date.now() - (existing.timestamp || Date.now()),
-          isHttp: (existing.url || params.response.url).startsWith('http://'),
-          failed: params.response.status >= 400,
-          timestamp: existing.timestamp || Date.now(),
-        };
-        this.networkListeners.forEach((fn) => fn(netReq));
-        this.networkRequestsMap.delete(reqId);
-      }
+      Object.assign(request, { status: params.response.status, statusText: params.response.statusText,
+        resourceType: params.type, mimeType: params.response.mimeType,
+        responseHeaders: params.response.headers, failed: params.response.status >= 400 });
+      this.networkListeners.forEach(fn => fn({ ...request }));
     }
-
     if (method === 'Network.loadingFailed') {
-      const reqId = params.requestId;
-      const existing = this.networkRequestsMap.get(reqId);
-      if (existing) {
-        const netReq: NetworkRequest = {
-          id: reqId,
-          tabId: this.tabId,
-          url: existing.url || 'unknown',
-          method: existing.method || 'GET',
-          status: 0,
-          statusText: 'Failed',
-          isHttp: (existing.url || '').startsWith('http://'),
-          failed: true,
-          failureReason: params.errorText,
-          durationMs: Date.now() - (existing.timestamp || Date.now()),
-          timestamp: existing.timestamp || Date.now(),
-        };
-        this.networkListeners.forEach((fn) => fn(netReq));
-        this.networkRequestsMap.delete(reqId);
+      Object.assign(request, { completed: true, failed: true, failureReason: params.errorText,
+        durationMs: Date.now() - request.timestamp });
+      this.networkRequestsMap.delete(id);
+      this.networkListeners.forEach(fn => fn({ ...request }));
+    }
+    if (method === 'Network.loadingFinished') {
+      this.networkRequestsMap.delete(id);
+      Object.assign(request, { completed: true, encodedSize: params.encodedDataLength,
+        durationMs: Date.now() - request.timestamp });
+      this.networkListeners.forEach(fn => fn({ ...request }));
+      if (['Fetch', 'XHR'].includes(request.resourceType || '')) {
+        void this.captureResponse(request);
       }
     }
+  }
+
+  private async captureResponse(request: NetworkRequest) {
+    try {
+      // Do not reattach a debugger merely to read an old body.
+      const result = await this.webContents.debugger.sendCommand('Network.getResponseBody', { requestId: request.id });
+      const body = result.base64Encoded ? Buffer.from(result.body, 'base64').toString('utf8') : result.body;
+      request.responseBody = body.slice(0, 65536);
+      if (body.length > 65536) request.bodyNote = 'Response truncated to 65,536 characters.';
+    } catch {
+      request.bodyNote = 'Response body unavailable (buffer evicted, redirect, or debugger detached).';
+    }
+    this.networkListeners.forEach(fn => fn({ ...request }));
   }
 
   public on(event: string, listener: CDPEventListener) {

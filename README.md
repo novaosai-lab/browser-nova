@@ -56,3 +56,9 @@ npm run dist:mac:universal  # local Apple Silicon + Intel DMG + ZIP
 - [AGENTS.md](AGENTS.md) — กติกาการทำงานของโปรเจกต์
 
 ตามคำสั่งผู้ใช้ หลังเปลี่ยนแปลงงานต้องอัปเดต Markdown ที่เกี่ยวข้อง ตรวจตามความเหมาะสม แล้ว commit/push ขึ้น GitHub และยืนยันว่า sync สำเร็จ การแก้เอกสารอย่างเดียวไม่ต้องออก application release ใหม่
+
+### ดู API request / response
+
+เปิด **Inspect → Network** (ค่าเริ่มต้น Fetch/XHR), ทำรายการบนเว็บ แล้วเลือก request เพื่อดู **Headers / Payload / Response** หรือ Copy ข้อมูล ค้นหา URL/method/status และกรอง Errors ได้ เก็บ 200 รายการขณะเปิด Inspect และจำกัด body 65,536 ตัวอักษร ไม่มีการส่ง request ซ้ำ ข้อมูลที่คัดลอกอาจมี credentials จากเว็บนั้น
+
+ทดสอบ API inspector ด้วย `npm run test:network` (Electron + API จำลองบน loopback). อ้างอิง [CDP Network](https://chromedevtools.github.io/devtools-protocol/tot/Network/).

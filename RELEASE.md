@@ -94,3 +94,7 @@ npm run release:mac
 - [electron-builder auto-update v26](https://www.electron.build/v26/docs/features/auto-update/)
 - [macOS code signing](https://www.electron.build/v26/docs/features/code-signing/)
 - [GitHub Actions setup-node](https://github.com/actions/setup-node)
+
+### Network inspector development build (22 September 2026)
+
+The API inspector changes are available in the working-branch CI macOS artifact and local arm64 build. They do not replace the published v0.2.0-preview.1 assets. Run `npm run test:network` before packaging. Auto-update remains disabled.

@@ -1,5 +1,17 @@
 # สรุปการปรับปรุง Browser Nova
 
+
+## Network API Inspector — 22 กันยายน 2026
+
+- Inspect เปิด Network เป็นค่าเริ่มต้นและกรอง Fetch/XHR; ค้นหา URL/method/status, กรอง error และล้างรายการได้
+- เลือก request เพื่ออ่าน request/response headers, query parameters, payload และ response แบบ formatted JSON พร้อม Copy
+- CDP เก็บ response หลัง loadingFinished แสดง pending/error/duration/ขนาด; สลับแท็บล้างรายการป้องกันข้อมูลปนกัน
+- เก็บในหน่วยความจำ 200 รายการขณะเปิด Inspect, request/response body สูงสุด 65,536 ตัวอักษร; body ที่อ่านไม่ได้แสดงเหตุผล ไม่มีการ replay หรือเรียก API ภายในจริง
+- ข้อจำกัด: ไม่ใช่ HAR/packet capture; ไม่มีประวัติก่อนเปิด Inspect, redirect hops และ extra-info headers (เช่น cookies บางส่วน) ไม่ครบ; streaming ต้องรอจบ, binary แสดงเป็นข้อความ และ multipart upload อาจไม่มี payload ครบ ใช้ DevTools เต็มสำหรับกรณีเหล่านี้
+- Build: macOS arm64 local build และ ad-hoc signature verification ผ่าน; ไม่ได้แทนที่แอปใน Applications หรือเผยแพร่ release ใหม่ ใช้ไฟล์ใน release/local หรือ CI artifact
+- Validation: npm test ผ่าน 67 รายการและ renderer build; เพิ่ม real Electron loopback integration สำหรับ Fetch/XHR, POST payload, headers/body, HTTP 422 และ truncation (12 assertions). ไม่ใช่ signed-update test
+
+
 เอกสารนี้สรุปการแก้ไขและปรับปรุงที่ทำกับโปรเจกต์ Browser Nova จากการรีวิวโค้ดด้านความปลอดภัยและความถูกต้อง
 
 **อัปเดตล่าสุด: 22 กันยายน 2026** — เพิ่ม Side Panel Extensions ใน macOS Preview 0.2.0 ดู [EXTENSIONS.md](EXTENSIONS.md) ส่วน auto-update installation ยังปิดใน preview และต้องผ่านเงื่อนไข [RELEASE.md](RELEASE.md) ก่อนใช้งานจริง

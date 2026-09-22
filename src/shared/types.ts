@@ -31,6 +31,14 @@ export interface ConsoleMessage {
 }
 
 export interface NetworkRequest {
+  resourceType?: string;
+  requestHeaders?: Record<string, string>;
+  responseHeaders?: Record<string, string>;
+  postData?: string;
+  responseBody?: string;
+  bodyNote?: string;
+  completed?: boolean;
+  encodedSize?: number;
   id: string;
   tabId: string;
   url: string;

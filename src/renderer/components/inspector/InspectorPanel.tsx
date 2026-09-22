@@ -1,3 +1,4 @@
+import { NetworkPanel } from './NetworkPanel';
 import React, { useState, useEffect } from 'react';
 import { Tab, ConsoleMessage, NetworkRequest, ElementInspection } from '../../../shared/types';
 import { MousePointer, Terminal, Wifi, Copy, Check, Trash2, AlertTriangle, XCircle, Globe, Lock, ShieldAlert } from 'lucide-react';
@@ -8,7 +9,7 @@ interface InspectorPanelProps {
 }
 
 export const InspectorPanel: React.FC<InspectorPanelProps> = ({ activeTab, onOpenDevTools }) => {
-  const [subTab, setSubTab] = useState<'elements' | 'console' | 'network'>('elements');
+  const [subTab, setSubTab] = useState<'elements' | 'console' | 'network'>('network');
   const [selectedElement, setSelectedElement] = useState<ElementInspection | null>(null);
   const [consoleLogs, setConsoleLogs] = useState<ConsoleMessage[]>([]);
   const [networkRequests, setNetworkRequests] = useState<NetworkRequest[]>([]);
@@ -17,6 +18,9 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ activeTab, onOpe
   const [isPicking, setIsPicking] = useState(false);
 
   useEffect(() => {
+    setNetworkRequests([]);
+    setConsoleLogs([]);
+    setSelectedElement(null);
     // Listen for live console events from active tab
     const unsubConsole = (window as any).nova?.inspector?.onConsole((msg: ConsoleMessage) => {
       if (msg.tabId === activeTab?.id) {
@@ -235,78 +239,7 @@ export const InspectorPanel: React.FC<InspectorPanelProps> = ({ activeTab, onOpe
         </div>
       )}
 
-      {/* Network Tab */}
-      {subTab === 'network' && (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-              คำขอทั้งหมด: {networkRequests.length}
-            </span>
-            <button className="icon-btn" onClick={() => setNetworkRequests([])} title="ล้าง Network">
-              <Trash2 size={13} />
-            </button>
-          </div>
-
-          <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            {networkRequests.length === 0 ? (
-              <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px', marginTop: '30px' }}>
-                ยังไม่มี Network Requests
-              </div>
-            ) : (
-              networkRequests.map((req) => (
-                <div
-                  key={req.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '6px 8px',
-                    background: req.failed ? 'rgba(244, 63, 94, 0.1)' : 'rgba(0, 0, 0, 0.2)',
-                    borderLeft: `3px solid ${req.failed ? 'var(--accent-rose)' : req.isHttp ? 'var(--accent-amber)' : 'var(--accent-emerald)'}`,
-                    borderRadius: '4px',
-                    fontSize: '11px',
-                    fontFamily: 'var(--font-mono)',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontWeight: 600,
-                      color: req.method === 'POST' ? '#38bdf8' : '#a78bfa',
-                      width: '42px',
-                    }}
-                  >
-                    {req.method}
-                  </span>
-
-                  <span
-                    style={{
-                      fontWeight: 600,
-                      color: req.status >= 400 || req.failed ? 'var(--accent-rose)' : 'var(--accent-emerald)',
-                      width: '32px',
-                    }}
-                  >
-                    {req.status || 'ERR'}
-                  </span>
-
-                  <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--text-secondary)' }}>
-                    {req.url}
-                  </span>
-
-                  {req.isHttp ? (
-                    <span style={{ fontSize: '10px', color: 'var(--badge-http-text)', padding: '1px 4px', background: 'var(--badge-http-bg)', borderRadius: '3px' }}>
-                      HTTP
-                    </span>
-                  ) : (
-                    <span style={{ fontSize: '10px', color: 'var(--badge-https-text)', padding: '1px 4px', background: 'var(--badge-https-bg)', borderRadius: '3px' }}>
-                      HTTPS
-                    </span>
-                  )}
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      )}
+      {subTab === 'network' && <NetworkPanel requests={networkRequests} onClear={() => setNetworkRequests([])} />}
     </div>
   );
 };

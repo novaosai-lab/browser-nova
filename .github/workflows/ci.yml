@@ -24,6 +24,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run test:extensions
+      - run: npm run test:network
       - run: npm run dist:mac
       - name: Verify local app signature
         run: codesign --verify --deep --strict 'release/local/mac-arm64/Browser Nova.app'

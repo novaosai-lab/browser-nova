@@ -1,7 +1,7 @@
 {
   "name": "browser-nova",
   "version": "0.2.0",
-  "description": "Browser Nova — Desktop browser for HTTP, Web Inspection, and AI Automation",
+  "description": "Browser Nova \u2014 Desktop browser for HTTP, Web Inspection, and AI Automation",
   "main": "dist/main/index.js",
   "type": "module",
   "scripts": {
@@ -19,7 +19,8 @@
     "dist:mac:universal": "node scripts/package-mac.mjs --universal",
     "release:mac": "node scripts/package-mac.mjs --release --universal",
     "test:updates": "node --test dist/tests/update-test.js tests/release-config.test.cjs",
-    "test:extensions": "npm run build:main && electron dist/tests/extension-integration.js"
+    "test:extensions": "npm run build:main && electron dist/tests/extension-integration.js",
+    "test:network": "npm run build:main && electron dist/tests/network-integration.js"
   },
   "keywords": [
     "browser",
