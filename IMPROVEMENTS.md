@@ -6,6 +6,9 @@
 
 ผลทดสอบรอบ 0.1.1: `npm test` ผ่าน unit 35 รายการ + smoke 19 รายการ + updater/config 10 รายการ = **64 ผ่าน** พร้อม typecheck/build ดู CI ของแต่ละ commit ที่ [GitHub Actions](https://github.com/novaosai-lab/browser-nova/actions/workflows/ci.yml) รายละเอียดรอบเก่าด้านล่างเป็นประวัติ ณ เวลานั้น ไม่ใช่สถานะล่าสุดทั้งหมด
 
+
+**อัปเดตเอกสาร 22 กันยายน 2026:** ปรับ [Super Agent Roadmap](SUPER_AGENT_ROADMAP.md) หลังตรวจโค้ดและได้รับอนุมัติ โดยเติม Phase 1 runtime/policy/secret boundaries, เกณฑ์ P1-A ถึง P1-H, สถาปัตยกรรมครบ 6 เสาหลัก, ขอบเขต Clone และ Phase Multi-model ตัดคำรับประกันและกรอบเวลาที่ไม่มีหลักฐาน งานนี้แก้เฉพาะเอกสาร ไม่ได้ implement ฟีเจอร์ใหม่หรือรัน tests แอปซ้ำในเครื่อง ตรวจ diff/ลิงก์/โครงสร้าง Markdown แล้ว; CI ตรวจตาม workflow เมื่อ push ข้อบกพร่อง runtime และ signed-update limitations ยังเหลือตาม roadmap และ RELEASE.md
+
 ---
 
 ## รอบที่ 1 — แก้ไขจากการรีวิว (5 รายการ)

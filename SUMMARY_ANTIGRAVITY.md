@@ -6,7 +6,7 @@
 **สถานะล่าสุด:** ส่งมอบ macOS Preview 0.1.1 พร้อมแก้พื้นที่ลากหน้าต่าง; typecheck/build และ unit/smoke/updater checks ผ่าน 64 รายการ แต่ยังมีข้อจำกัดตาม [REVIEW.md](REVIEW.md) และยังไม่ได้ตรวจ signed auto-update ครบวงจร
 **ผู้สร้าง (Created By):** Antigravity
 
-**ปรับปรุงสถานะล่าสุด:** 21 กันยายน 2026 โดย Codex หลังแก้พื้นที่ลากหน้าต่างและเพิ่มเวอร์ชันเป็น 0.1.1
+**ปรับปรุงสถานะล่าสุด:** 22 กันยายน 2026 โดย Codex — ปรับ Super Agent Roadmap ตามผลตรวจและการอนุมัติ เพิ่ม Phase 1 acceptance gates และแยกงานที่วางแผนจากสิ่งที่ส่งมอบแล้ว ตัวแอปยังเป็น 0.1.1; รอบนี้แก้เฉพาะเอกสาร ไม่ได้รัน tests แอปซ้ำในเครื่อง
 
 ## สถานะส่งมอบล่าสุด
 
@@ -20,7 +20,7 @@
 | Updater | มี Settings UI/native menu และ check/download/restart flow; ปิด installation ใน Preview ที่ยังไม่ notarize |
 | CI | [Test and build macOS — ผลตาม commit](https://github.com/novaosai-lab/browser-nova/actions/workflows/ci.yml) |
 | Signed release | มี workflow และคู่มือแล้ว; ยังต้องเพิ่ม Developer ID/notarization credentials และทดสอบอัปเดตสองเวอร์ชันจริง |
-| งานถัดไป | แผนยกระดับสู่ Super Agent Browser ใน [SUPER_AGENT_ROADMAP.md](SUPER_AGENT_ROADMAP.md) และข้อแก้ไขทางเทคนิคตาม [REVIEW.md](REVIEW.md) / [RELEASE.md](RELEASE.md) |
+| งานถัดไป | เริ่ม Phase 1 ตามเกณฑ์ P1-A ถึง P1-H ใน [SUPER_AGENT_ROADMAP.md](SUPER_AGENT_ROADMAP.md); ฟีเจอร์ในแผนยังไม่ถือว่าส่งมอบ และติดตามข้อแก้ไขทางเทคนิคตาม [REVIEW.md](REVIEW.md) / [RELEASE.md](RELEASE.md) |
 
 ทุกครั้งที่เปลี่ยนงาน ให้ปรับเอกสารและ commit/push GitHub ตาม [AGENTS.md](AGENTS.md) ประวัติการเปลี่ยนแปลงอยู่ใน [IMPROVEMENTS.md](IMPROVEMENTS.md)
 
