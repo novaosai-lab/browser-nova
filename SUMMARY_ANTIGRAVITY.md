@@ -1,5 +1,12 @@
 # รายงานสรุปผลการพัฒนา Browser Nova
 
+## Resizable side panel — 22 September 2026
+
+Side panel (Inspect, AI, Automation, Design Lab) now supports dragging its left edge, expand/restore, and remembered width. Double-click the edge to reset to 440px; keyboard Left/Right changes width, Home resets, End expands. Width is clamped to leave 240px for the page. A ResizeObserver synchronizes native web content bounds; native content is temporarily hidden during dragging to avoid intercepting the pointer. Extension panels remain separate and unchanged.
+
+Validation: TypeScript and macOS arm64 packaging; installed UI expand/restore verified (440 → 1200 → 440px). Automated desktop dragging did not produce a measurable change, so manual drag interaction remains unverified. Installed app passes ad-hoc signature verification; previous app is backed up locally. No API requests or signed auto-update testing is involved.
+
+
 
 ## Network API Inspector — 22 กันยายน 2026
 

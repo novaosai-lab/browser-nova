@@ -62,3 +62,5 @@ npm run dist:mac:universal  # local Apple Silicon + Intel DMG + ZIP
 เปิด **Inspect → Network** (ค่าเริ่มต้น Fetch/XHR), ทำรายการบนเว็บ แล้วเลือก request เพื่อดู **Headers / Payload / Response** หรือ Copy ข้อมูล ค้นหา URL/method/status และกรอง Errors ได้ เก็บ 200 รายการขณะเปิด Inspect และจำกัด body 65,536 ตัวอักษร ไม่มีการส่ง request ซ้ำ ข้อมูลที่คัดลอกอาจมี credentials จากเว็บนั้น
 
 ทดสอบ API inspector ด้วย `npm run test:network` (Electron + API จำลองบน loopback). อ้างอิง [CDP Network](https://chromedevtools.github.io/devtools-protocol/tot/Network/).
+
+Side panel: ลากขอบซ้ายเพื่อปรับความกว้าง หรือกดปุ่มขยาย/คืนขนาดด้านบน ระบบจำความกว้างไว้ ดับเบิลคลิกขอบเพื่อคืนค่าเริ่มต้น ใช้ลูกศรซ้าย/ขวาขณะ focus ขอบได้ด้วย

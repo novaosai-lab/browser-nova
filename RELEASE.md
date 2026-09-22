@@ -100,3 +100,5 @@ npm run release:mac
 The API inspector changes are available in the working-branch CI macOS artifact and local arm64 build. They do not replace the published v0.2.0-preview.1 assets. Run `npm run test:network` before packaging. Auto-update remains disabled.
 
 Local installation verified: the arm64 Network Inspector build from commit `666f44d` is installed in `/Applications/Browser Nova.app`, with the previous app backed up locally. App signature and executable/ASAR hashes match the build; the installed UI opens the Fetch/XHR inspector. This is a manual local installation, not an auto-update test.
+
+Resizable-panel local build installed on 22 September 2026. Previous app backed up as `release/backups/Browser Nova-before-resize-20260922.app`. Signature verification and installed expand/restore UI checks passed. No new public release or signed-update test.

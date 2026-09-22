@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Tab, SidePanelTab } from '../../shared/types';
-import { Sparkles, Search, Play, Palette, X } from 'lucide-react';
+import { Sparkles, Search, Play, Palette, X, Maximize2, Minimize2 } from 'lucide-react';
 import { AiChatPanel } from './ai/AiChatPanel';
 import { InspectorPanel } from './inspector/InspectorPanel';
 import { WorkflowPanel } from './automation/WorkflowPanel';
@@ -8,6 +8,7 @@ import { DesignLabPanel } from './design-lab/DesignLabPanel';
 
 interface SidePanelProps {
   isOpen: boolean;
+  onResizing: (value: boolean) => void;
   activeTab: Tab | null;
   activeSideTab: SidePanelTab;
   onSelectSideTab: (tab: SidePanelTab) => void;
@@ -17,12 +18,31 @@ interface SidePanelProps {
 
 export const SidePanel: React.FC<SidePanelProps> = ({
   isOpen,
+  onResizing,
   activeTab,
   activeSideTab,
   onSelectSideTab,
   onClose,
   onOpenDevTools,
 }) => {
+  const [width, setWidth] = useState(() => {
+    try { return Number(localStorage.getItem('nova.sidePanelWidth')) || 440; } catch { return 440; }
+  });
+  const [expanded, setExpanded] = useState(false);
+  const [viewport, setViewport] = useState(window.innerWidth);
+  const dragging = useRef(false);
+  const maximum = Math.max(280, viewport - 240);
+  const shownWidth = Math.min(maximum, Math.max(280, expanded ? maximum : width));
+  useEffect(() => {
+    const resize = () => setViewport(window.innerWidth);
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
+  }, []);
+  useEffect(() => {
+    try { localStorage.setItem('nova.sidePanelWidth', String(width)); } catch {}
+  }, [width]);
+  useEffect(() => { if (!isOpen) { dragging.current = false; onResizing(false); } }, [isOpen, onResizing]);
+  const finish = () => { dragging.current = false; onResizing(false); };
   if (!isOpen) return null;
 
   const getTitle = () => {
@@ -41,7 +61,17 @@ export const SidePanel: React.FC<SidePanelProps> = ({
   const titleInfo = getTitle();
 
   return (
-    <div className="side-panel">
+    <div className="side-panel" style={{ width: shownWidth, flexShrink: 0 }}>
+      <div className="panel-resize-handle" role="separator" aria-label="ปรับความกว้างแผงด้านข้าง"
+        aria-orientation="vertical" aria-valuemin={280} aria-valuemax={maximum} aria-valuenow={shownWidth} tabIndex={0}
+        onDoubleClick={() => { setExpanded(false); setWidth(440); }}
+        onPointerDown={e => { if (e.button !== 0) return; e.preventDefault(); e.currentTarget.setPointerCapture(e.pointerId); dragging.current = true; setExpanded(false); onResizing(true); }}
+        onPointerMove={e => { if (dragging.current) setWidth(Math.max(280, Math.min(maximum, window.innerWidth - e.clientX))); }}
+        onPointerUp={finish} onPointerCancel={finish} onLostPointerCapture={finish}
+        onKeyDown={e => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
+          e.preventDefault(); setExpanded(false);
+          setWidth(e.key === 'Home' ? 440 : e.key === 'End' ? maximum : Math.max(280, Math.min(maximum, shownWidth + (e.key === 'ArrowLeft' ? 32 : -32))));
+        } }} />
       {/* Header */}
       <div className="side-panel-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 600 }}>
@@ -81,6 +111,9 @@ export const SidePanel: React.FC<SidePanelProps> = ({
             </button>
           </div>
 
+          <button className="icon-btn" onClick={() => setExpanded(!expanded)} title={expanded ? 'คืนขนาดแผง' : 'ขยายแผง'}>
+            {expanded ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
+          </button>
           <button className="icon-btn" onClick={onClose} title="ปิดแผงด้านข้าง">
             <X size={15} />
           </button>

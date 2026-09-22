@@ -12,6 +12,7 @@ import { Globe, Puzzle } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [{ tabs, activeTabId }, setTabState] = useState<TabState>({ tabs: [], activeTabId: null });
+  const [panelResizing, setPanelResizing] = useState(false);
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
   const [activeSideTab, setActiveSideTab] = useState<SidePanelTab>('ai');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -39,16 +40,18 @@ export const App: React.FC = () => {
     (window as any).nova.layout.updateBounds({
       x: Math.round(rect.left),
       y: Math.round(rect.top),
-      width: isSettingsOpen ? 0 : Math.round(rect.width),
-      height: isSettingsOpen ? 0 : Math.round(rect.height),
+      width: isSettingsOpen || panelResizing ? 0 : Math.round(rect.width),
+      height: isSettingsOpen || panelResizing ? 0 : Math.round(rect.height),
     });
-  }, [isSettingsOpen]);
+  }, [isSettingsOpen, panelResizing]);
 
   // Window resize and panel toggle listener
   useEffect(() => {
     updateWebviewBounds();
+    const observer = new ResizeObserver(updateWebviewBounds);
+    if (webviewAreaRef.current) observer.observe(webviewAreaRef.current);
     window.addEventListener('resize', updateWebviewBounds);
-    return () => window.removeEventListener('resize', updateWebviewBounds);
+    return () => { observer.disconnect(); window.removeEventListener('resize', updateWebviewBounds); };
   }, [updateWebviewBounds, sidePanelOpen, extensionsOpen]);
 
   // Main owns both the visible webContents and the selected tab. Apply them
@@ -196,6 +199,7 @@ export const App: React.FC = () => {
         {/* Collapsible Side Panel */}
         {extensionsOpen && <ExtensionPanel items={extensions} selected={extensionId} onSelect={setExtensionId} onClose={() => setExtensionsOpen(false)} hidden={isSettingsOpen} loadError={extensionError}/> }
         <SidePanel
+          onResizing={setPanelResizing}
           isOpen={sidePanelOpen}
           activeTab={activeTab}
           activeSideTab={activeSideTab}
