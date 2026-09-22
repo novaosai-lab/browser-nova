@@ -3,6 +3,8 @@
 
 ## Network API Inspector — 22 กันยายน 2026
 
+**ติดตั้งในเครื่องแล้ว:** แทนที่ `/Applications/Browser Nova.app` ด้วย arm64 Network Inspector build จาก commit `666f44d`; สำรองแอปเดิมไว้ใน `release/backups/Browser Nova-before-network-20260922.app`. ตรวจ ad-hoc signature และ SHA-256 ของ app.asar/executable ตรงกับ build; เปิดแอปและตรวจ UI ว่า Inspect แสดง Fetch/XHR, search และ Headers/Payload/Response แล้ว การติดตั้งครั้งนี้ไม่ได้รัน unit/integration tests ซ้ำ และไม่ใช่ signed auto-update.
+
 - Inspect เปิด Network เป็นค่าเริ่มต้นและกรอง Fetch/XHR; ค้นหา URL/method/status, กรอง error และล้างรายการได้
 - เลือก request เพื่ออ่าน request/response headers, query parameters, payload และ response แบบ formatted JSON พร้อม Copy
 - CDP เก็บ response หลัง loadingFinished แสดง pending/error/duration/ขนาด; สลับแท็บล้างรายการป้องกันข้อมูลปนกัน
