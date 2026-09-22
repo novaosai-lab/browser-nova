@@ -420,3 +420,15 @@ body {
 .animate-spin {
   animation: spin 1s linear infinite;
 }
+
+/* Extension content is hosted in an isolated native view, never in the app DOM. */
+.extensions-panel { width: 400px; max-width: 45vw; flex-shrink: 0; display: flex; flex-direction: column; min-height: 0; border-left: 1px solid var(--border-subtle); background: var(--bg-surface); }
+.extensions-header { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 12px; }
+.extensions-header strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.extension-view-area { flex: 1; min-height: 0; }
+.extensions-list { padding: 12px; overflow-y: auto; font-size: 12px; }
+.extensions-list p { margin: 10px 0; line-height: 1.6; color: var(--text-secondary); }
+.extension-card { margin-top: 14px; padding: 12px; border: 1px solid var(--border-subtle); border-radius: 8px; overflow-wrap: anywhere; }
+.extension-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.extension-error { color: #fca5a5 !important; padding: 8px; overflow-wrap: anywhere; }
+.extension-shortcuts { display: flex; max-width: 96px; overflow-x: auto; }

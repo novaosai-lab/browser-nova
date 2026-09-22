@@ -1,4 +1,12 @@
 export const IPC_CHANNELS = {
+  EXTENSIONS_LIST: 'extensions:list',
+  EXTENSIONS_IMPORT: 'extensions:import',
+  EXTENSIONS_OPEN: 'extensions:open',
+  EXTENSIONS_CLOSE: 'extensions:close',
+  EXTENSIONS_BOUNDS: 'extensions:bounds',
+  EXTENSIONS_ENABLE: 'extensions:enable',
+  EXTENSIONS_REMOVE: 'extensions:remove',
+  EXTENSIONS_CHANGED: 'extensions:changed',
   // Tabs
   TAB_CREATE: 'tab:create',
   TAB_CLOSE: 'tab:close',

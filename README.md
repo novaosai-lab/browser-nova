@@ -11,7 +11,7 @@ Desktop browser สำหรับเปิด HTTP/HTTPS, ตรวจ DOM/Cons
 - เปิด DMG แล้วลาก **Browser Nova.app** ไปที่ **Applications**
 - macOS 11 หรือใหม่กว่า สำหรับ Electron 34 ที่ใช้ใน build นี้
 
-รุ่น 0.1.1 preview เป็น build สำหรับทดสอบ ลงนามแบบ ad-hoc ยังไม่ได้ notarize กับ Apple และยังไม่เปิดอัปเดตอัตโนมัติ ต้องติดตั้ง signed release แรกด้วยตนเองเมื่อพร้อม รุ่น signed ต่อไปจะตรวจสอบผ่าน GitHub Releases และให้ยืนยันก่อนติดตั้ง ดู [RELEASE.md](RELEASE.md)
+รุ่น 0.2.0 preview เป็น build สำหรับทดสอบ ลงนามแบบ ad-hoc ยังไม่ได้ notarize กับ Apple และยังไม่เปิดอัปเดตอัตโนมัติ ต้องติดตั้ง signed release แรกด้วยตนเองเมื่อพร้อม รุ่น signed ต่อไปจะตรวจสอบผ่าน GitHub Releases และให้ยืนยันก่อนติดตั้ง ดู [RELEASE.md](RELEASE.md)
 
 ## ใช้งาน
 
@@ -20,6 +20,10 @@ Desktop browser สำหรับเปิด HTTP/HTTPS, ตรวจ DOM/Cons
 - ลากพื้นที่ว่างบนแถบแท็บ หรือมุมขวาสุดของแถบแท็บ เพื่อย้ายหน้าต่าง
 - Settings ใช้ตั้ง AI provider/API key และดูสถานะอัปเดต
 - เมนู **Browser Nova → Check for Updates…** ใช้ตรวจเวอร์ชันใหม่
+
+## Extensions
+
+กด **จัดการ Extensions → โหลดโฟลเดอร์ส่วนขยาย** เพื่อโหลดเครื่องมือแบบ Side Panel แล้วเปิดจาก toolbar ได้ รองรับรูปแบบ OMS TOOL ที่ตรวจ manifest แล้ว; ยังไม่ได้ทดสอบ API ภายในจริง ดูขอบเขตและวิธีใช้ใน [EXTENSIONS.md](EXTENSIONS.md) ไม่รองรับ Chrome extensions ทุกตัวหรือการติดตั้งจาก Web Store
 
 ## พัฒนาและทดสอบ
 
@@ -32,6 +36,7 @@ npm run dev
 
 ```sh
 npm test
+npm run test:extensions    # real Electron + loopback API fixtures
 npm run dist:mac            # local arm64 DMG + ZIP
 npm run dist:mac:universal  # local Apple Silicon + Intel DMG + ZIP
 ```

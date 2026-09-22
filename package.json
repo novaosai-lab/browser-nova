@@ -1,6 +1,6 @@
 {
   "name": "browser-nova",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Browser Nova — Desktop browser for HTTP, Web Inspection, and AI Automation",
   "main": "dist/main/index.js",
   "type": "module",
@@ -13,12 +13,13 @@
     "typecheck": "tsc --noEmit",
     "test:fixture": "node dist/fixtures/server.js",
     "test:unit": "node dist/tests/unit-test.js",
-    "test": "npm run typecheck && node scripts/build.mjs && node dist/tests/unit-test.js && node dist/tests/smoke-test.js && npm run test:updates",
+    "test": "npm run typecheck && node scripts/build.mjs && node dist/tests/unit-test.js && node dist/tests/smoke-test.js && npm run test:updates && node --test dist/tests/extension-test.js",
     "cli": "node dist/packages/cli/bin.js",
     "dist:mac": "node scripts/package-mac.mjs --arm64",
     "dist:mac:universal": "node scripts/package-mac.mjs --universal",
     "release:mac": "node scripts/package-mac.mjs --release --universal",
-    "test:updates": "node --test dist/tests/update-test.js tests/release-config.test.cjs"
+    "test:updates": "node --test dist/tests/update-test.js tests/release-config.test.cjs",
+    "test:extensions": "npm run build:main && electron dist/tests/extension-integration.js"
   },
   "keywords": [
     "browser",

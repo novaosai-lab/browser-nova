@@ -1,3 +1,5 @@
+import { ExtensionManager } from './extensions/manager';
+import { registerExtensionIpc } from './extensions/ipc';
 import { app, BrowserWindow, shell, Menu } from 'electron';
 import path from 'path';
 import fs from 'fs';
@@ -203,6 +205,13 @@ async function createWindow() {
   });
 
   registerIpcHandlers(tabManager, evidence, loadSettings, saveSettings);
+
+  const extensionHost = new ExtensionManager(mainWindow, path.join(app.getPath('userData'), 'side-extensions'), () => {
+    if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send(IPC_CHANNELS.EXTENSIONS_CHANGED);
+  });
+  await extensionHost.restore();
+  registerExtensionIpc(mainWindow, extensionHost);
+  app.once('before-quit', () => extensionHost.dispose());
 
   // Chrome-style keyboard shortcuts (New/Close tab, reload, focus omnibox, nav).
   buildAppMenu(mainWindow, tabManager);

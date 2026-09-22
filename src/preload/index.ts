@@ -1,9 +1,24 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { IPC_CHANNELS } from '../shared/ipc-channels';
 import { AppSettings, Bounds, Tab, TabState, Workflow } from '../shared/types';
+import type { SideExtension } from '../shared/extension-types';
 import type { UpdateState } from '../shared/update-types';
 
 const novaApi = {
+  extensions: {
+    list: (): Promise<SideExtension[]> => ipcRenderer.invoke(IPC_CHANNELS.EXTENSIONS_LIST),
+    importFolder: (): Promise<SideExtension | null> => ipcRenderer.invoke(IPC_CHANNELS.EXTENSIONS_IMPORT),
+    open: (id: string): Promise<void> => ipcRenderer.invoke(IPC_CHANNELS.EXTENSIONS_OPEN, id),
+    close: (): Promise<void> => ipcRenderer.invoke(IPC_CHANNELS.EXTENSIONS_CLOSE),
+    bounds: (bounds: Bounds): Promise<void> => ipcRenderer.invoke(IPC_CHANNELS.EXTENSIONS_BOUNDS, bounds),
+    enable: (id: string, enabled: boolean): Promise<void> => ipcRenderer.invoke(IPC_CHANNELS.EXTENSIONS_ENABLE, id, enabled),
+    remove: (id: string): Promise<void> => ipcRenderer.invoke(IPC_CHANNELS.EXTENSIONS_REMOVE, id),
+    onChanged: (callback: () => void) => {
+      const listener = () => callback();
+      ipcRenderer.on(IPC_CHANNELS.EXTENSIONS_CHANGED, listener);
+      return () => ipcRenderer.removeListener(IPC_CHANNELS.EXTENSIONS_CHANGED, listener);
+    },
+  },
   updates: {
     getState: (): Promise<UpdateState> => ipcRenderer.invoke(IPC_CHANNELS.UPDATES_GET_STATE),
     check: (): Promise<UpdateState> => ipcRenderer.invoke(IPC_CHANNELS.UPDATES_CHECK),

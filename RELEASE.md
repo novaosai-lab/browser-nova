@@ -4,9 +4,9 @@
 
 เตรียม DMG/ZIP, app icon, Universal build, update controller, Settings UI, native update menu และ GitHub Actions แล้ว
 
-เผยแพร่ [v0.1.1-preview.1](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.1.1-preview.1) เมื่อ 21 กันยายน 2026 พร้อม DMG/ZIP/blockmap สำหรับ arm64 และ Universal รวม 8 ไฟล์ และ `SHA256SUMS` ตรวจ digest บน GitHub ตรงกับไฟล์ในเครื่องแล้ว ติดตั้งและเปิด Universal ใน Applications บน Apple Silicon แล้ว; ยังไม่ได้ทดสอบรันบน Intel จริง
+เผยแพร่ [v0.2.0-preview.1](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.2.0-preview.1) เมื่อ 22 กันยายน 2026 พร้อม DMG/ZIP/blockmap สำหรับ arm64 และ Universal รวม 8 ไฟล์ และ `SHA256SUMS` ตรวจ digest บน GitHub ตรงกับไฟล์ในเครื่องแล้ว ติดตั้งและเปิด Universal ใน Applications บน Apple Silicon แล้ว; ยังไม่ได้ทดสอบรันบน Intel จริง
 
-รุ่น 0.1.1 แก้ native drag region บนแถบแท็บและเว้นพื้นที่ลากด้านขวา ดูผลตรวจและข้อจำกัดใน [IMPROVEMENTS.md](IMPROVEMENTS.md) ผล CI แยกตาม commit อยู่ที่ [Test and build macOS](https://github.com/novaosai-lab/browser-nova/actions/workflows/ci.yml) หลังแก้งานให้ปรับเอกสารและ push source ตาม [AGENTS.md](AGENTS.md); ขั้นตอนเผยแพร่ binary release อยู่ด้านล่าง
+รุ่น 0.2.0 เพิ่ม Side Panel Extension Manager ตาม [EXTENSIONS.md](EXTENSIONS.md) ดูผลตรวจและข้อจำกัดใน [IMPROVEMENTS.md](IMPROVEMENTS.md) ผล CI แยกตาม commit อยู่ที่ [Test and build macOS](https://github.com/novaosai-lab/browser-nova/actions/workflows/ci.yml) หลังแก้งานให้ปรับเอกสารและ push source ตาม [AGENTS.md](AGENTS.md); ขั้นตอนเผยแพร่ binary release อยู่ด้านล่าง
 
 Local preview ใช้ ad-hoc signing และตั้ง `updatesEnabled: false` โดยเจตนา เพราะไม่มี Developer ID Application และ Apple notarization credentials ในเครื่องนี้ ไม่มี feed ปลอมหรือ GitHub token ฝังในแอป
 
@@ -17,6 +17,7 @@ Local preview ใช้ ad-hoc signing และตั้ง `updatesEnabled: fa
 ```sh
 npm ci
 npm test
+npm run test:extensions
 npm run dist:mac
 npm run dist:mac:universal
 ```

@@ -14,6 +14,7 @@ import {
   Settings,
   Terminal,
   Server,
+  Puzzle,
 } from 'lucide-react';
 
 interface AddressBarProps {
@@ -28,6 +29,8 @@ interface AddressBarProps {
   onOpenDevTools: () => void;
   onToggleSidePanel: (tab?: SidePanelTab) => void;
   onOpenSettings: () => void;
+  onOpenExtensions: () => void;
+  extensionButtons: React.ReactNode;
 }
 
 export const AddressBar: React.FC<AddressBarProps> = ({
@@ -42,6 +45,8 @@ export const AddressBar: React.FC<AddressBarProps> = ({
   onOpenDevTools,
   onToggleSidePanel,
   onOpenSettings,
+  onOpenExtensions,
+  extensionButtons,
 }) => {
   const [inputUrl, setInputUrl] = useState('');
   const [preferHttp, setPreferHttp] = useState(false);
@@ -163,6 +168,8 @@ export const AddressBar: React.FC<AddressBarProps> = ({
 
       {/* Feature Panel Buttons */}
       <div className="tool-buttons">
+        <div className="extension-shortcuts">{extensionButtons}</div>
+        <button className="icon-btn" onClick={onOpenExtensions} title="จัดการ Extensions"><Puzzle size={16}/></button>
         <button
           className={`badge-btn ${sidePanelOpen && activeSideTab === 'ai' ? 'active' : ''}`}
           onClick={() => onToggleSidePanel('ai')}

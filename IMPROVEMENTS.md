@@ -2,12 +2,25 @@
 
 เอกสารนี้สรุปการแก้ไขและปรับปรุงที่ทำกับโปรเจกต์ Browser Nova จากการรีวิวโค้ดด้านความปลอดภัยและความถูกต้อง
 
-**อัปเดตล่าสุด: 21 กันยายน 2026** — แก้พื้นที่ลากหน้าต่างใน [macOS Preview 0.1.1](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.1.1-preview.1) มี build สำหรับ Apple Silicon และ Universal รวม Intel พร้อมโค้ด updater และ GitHub Actions ส่วนการอัปเดตจริงระหว่าง signed releases ยังรอ Developer ID, notarization และการทดสอบตาม [RELEASE.md](RELEASE.md)
+**อัปเดตล่าสุด: 22 กันยายน 2026** — เพิ่ม Side Panel Extensions ใน macOS Preview 0.2.0 ดู [EXTENSIONS.md](EXTENSIONS.md) ส่วน auto-update installation ยังปิดใน preview และต้องผ่านเงื่อนไข [RELEASE.md](RELEASE.md) ก่อนใช้งานจริง
 
 ผลทดสอบรอบ 0.1.1: `npm test` ผ่าน unit 35 รายการ + smoke 19 รายการ + updater/config 10 รายการ = **64 ผ่าน** พร้อม typecheck/build ดู CI ของแต่ละ commit ที่ [GitHub Actions](https://github.com/novaosai-lab/browser-nova/actions/workflows/ci.yml) รายละเอียดรอบเก่าด้านล่างเป็นประวัติ ณ เวลานั้น ไม่ใช่สถานะล่าสุดทั้งหมด
 
 
 **อัปเดตเอกสาร 22 กันยายน 2026:** ปรับ [Super Agent Roadmap](SUPER_AGENT_ROADMAP.md) หลังตรวจโค้ดและได้รับอนุมัติ โดยเติม Phase 1 runtime/policy/secret boundaries, เกณฑ์ P1-A ถึง P1-H, สถาปัตยกรรมครบ 6 เสาหลัก, ขอบเขต Clone และ Phase Multi-model ตัดคำรับประกันและกรอบเวลาที่ไม่มีหลักฐาน งานนี้แก้เฉพาะเอกสาร ไม่ได้ implement ฟีเจอร์ใหม่หรือรัน tests แอปซ้ำในเครื่อง ตรวจ diff/ลิงก์/โครงสร้าง Markdown แล้ว; CI ตรวจตาม workflow เมื่อ push ข้อบกพร่อง runtime และ signed-update limitations ยังเหลือตาม roadmap และ RELEASE.md
+
+
+## รอบที่ 7 — Side Panel Extensions (22 กันยายน 2026, 0.2.0)
+
+- เพิ่ม Extension Manager: เลือกโฟลเดอร์ ตรวจ manifest/สิทธิ์ ติดตั้งเป็น snapshot เปิดจาก toolbar เปิด/ปิดใช้งาน ถอนติดตั้ง และ restore รายการหลังเปิดแอป
+- รองรับ MV3 Side Panel subset โดย Nova เปิดแผงแทน bootstrap `setPanelBehavior`; worker ทั่วไปและ Chrome APIs อื่นนอกขอบเขตไม่ถือว่ารองรับ
+- แยก persistent session ต่อ extension ใช้ native host permissions พร้อม network allowlist รวม redirect, ไม่มี Nova bridge/Node integration, คง web security และตรวจ management IPC
+- เพิ่ม fixture สาธารณะและ CI สำหรับ native Electron integration โดยไม่ใช้ OMS source หรือ endpoint ภายใน
+- ตรวจ: `npm test` ผ่าน 67 รายการ (เดิม 64 + extension unit 3), Electron loopback integration ผ่าน 18 checks; UI fixture โหลด/เปิด/กรอก/กดปุ่ม/Settings ผ่าน ตัวตรวจ OMS manifest/bootstrap ผ่าน แต่ยังไม่เรียก API จริง
+- Build arm64/Universal ผ่าน ตรวจ signature/DMG ทั้งสองแบบ และติดตั้ง/เปิด Universal 0.2.0 จาก Applications บน Apple Silicon แล้ว; ไม่รวม test harness หรือส่วนขยายภายในใน app bundle
+- Registry เสียจะแสดงข้อผิดพลาดและไม่ทับข้อมูลเดิม; ทดสอบกรณีนี้เพิ่มเติมแล้ว
+- ข้อจำกัด: ไม่มี store/CRX install, arbitrary workers/content scripts, shared login กับแท็บหลัก, custom toolbar icons หรือ extension auto-update; แอป preview ยังไม่ notarize/เปิด auto-update installation
+- คู่มือและขอบเขตทั้งหมดอยู่ใน [EXTENSIONS.md](EXTENSIONS.md) งานนี้ไม่ได้ปิด Phase 1 ของ Super Agent Roadmap
 
 ---
 

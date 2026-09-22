@@ -85,6 +85,12 @@ async function build() {
     outfile: path.resolve(root, 'dist/tests/update-test.js'),
   });
 
+  for (const [name, source] of [
+    ['extension-test', 'tests/unit/extension-test.ts'],
+    ['extension-integration', 'tests/e2e/extension-integration.ts'],
+  ]) {
+    await esbuild.build({ ...commonConfig, entryPoints: [path.resolve(root, source)], outfile: path.resolve(root, `dist/tests/${name}.js`) });
+  }
   console.log('Build completed successfully.');
 }
 

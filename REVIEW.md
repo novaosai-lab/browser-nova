@@ -10,6 +10,8 @@
 
 ข้ออื่นในรีวิวนี้ยังไม่ถือว่าปิดจากงาน packaging/documentation ดูสถานะล่าสุดใน [IMPROVEMENTS.md](IMPROVEMENTS.md), [SUMMARY_ANTIGRAVITY.md](SUMMARY_ANTIGRAVITY.md) และข้อกำหนด signed release ใน [RELEASE.md](RELEASE.md)
 
+**เพิ่มเติม 22 กันยายน 2026:** รุ่น 0.2.0 เพิ่ม Side Panel Extensions พร้อม session/network/IPC isolation เฉพาะเส้นทางส่วนขยาย และ native Electron tests ดู [EXTENSIONS.md](EXTENSIONS.md) การเพิ่มนี้ไม่ปิดข้อบกพร่อง AI/automation หรือ IPC เดิมในรีวิวด้านล่าง
+
 ---
 
 อ่าน IMPROVEMENTS.md และ SUMMARY_ANTIGRAVITY.md แล้วตรวจเทียบกับซอร์สโค้ด รันชุดทดสอบเดิม และทำ regression checks แบบแยกส่วน ผลคือมีโครงสร้างต้นแบบครบหลายส่วนและมีการปรับปรุงตามรายงานจริง แต่ยังไม่ควรระบุว่าเสร็จ 100% ตาม PLAN.md เพราะพบ runtime bugs และบางฟังก์ชันยังส่งผลลัพธ์จำลอง

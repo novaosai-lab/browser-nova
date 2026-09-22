@@ -5,13 +5,30 @@ import { TabBar } from './components/TabBar';
 import { AddressBar } from './components/AddressBar';
 import { SidePanel } from './components/SidePanel';
 import { SettingsModal } from './components/settings/SettingsModal';
-import { Globe } from 'lucide-react';
+import { ExtensionPanel } from './components/ExtensionPanel';
+import type { SideExtension } from '../shared/extension-types';
+import type { NovaApi } from '../preload';
+import { Globe, Puzzle } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [{ tabs, activeTabId }, setTabState] = useState<TabState>({ tabs: [], activeTabId: null });
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
   const [activeSideTab, setActiveSideTab] = useState<SidePanelTab>('ai');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  const [extensionsOpen, setExtensionsOpen] = useState(false);
+  const [extensionId, setExtensionId] = useState<string | null>(null);
+  const [extensionError, setExtensionError] = useState('');
+  const [extensions, setExtensions] = useState<SideExtension[]>([]);
+  useEffect(() => {
+    const api = (window as unknown as { nova: NovaApi }).nova?.extensions;
+    if (!api) return;
+    let alive = true;
+    const refresh = () => { void api.list().then(items => { if (alive) { setExtensions(items); setExtensionError(''); } }).catch(e => { if (alive) setExtensionError(String(e)); }); };
+    const off = api.onChanged(refresh); refresh();
+    return () => { alive = false; off(); };
+  }, []);
+  const openExtensions = (id: string | null = null) => { setExtensionId(id); setExtensionsOpen(true); setSidePanelOpen(false); };
 
   const webviewAreaRef = useRef<HTMLDivElement>(null);
 
@@ -32,7 +49,7 @@ export const App: React.FC = () => {
     updateWebviewBounds();
     window.addEventListener('resize', updateWebviewBounds);
     return () => window.removeEventListener('resize', updateWebviewBounds);
-  }, [updateWebviewBounds, sidePanelOpen]);
+  }, [updateWebviewBounds, sidePanelOpen, extensionsOpen]);
 
   // Main owns both the visible webContents and the selected tab. Apply them
   // together, including tabs created after this renderer has mounted.
@@ -117,6 +134,7 @@ export const App: React.FC = () => {
   };
 
   const handleToggleSidePanel = (tab?: SidePanelTab) => {
+    setExtensionsOpen(false);
     if (tab) {
       if (sidePanelOpen && activeSideTab === tab) {
         setSidePanelOpen(false);
@@ -153,6 +171,8 @@ export const App: React.FC = () => {
           onOpenDevTools={handleOpenDevTools}
           onToggleSidePanel={handleToggleSidePanel}
           onOpenSettings={() => setIsSettingsOpen(true)}
+          onOpenExtensions={() => openExtensions()}
+          extensionButtons={extensions.filter(e => e.enabled && !e.error).map(ext => <button key={ext.id} className="icon-btn" title={`เปิด ${ext.name}`} onClick={() => openExtensions(ext.id)}><Puzzle size={15}/></button>)}
         />
       </div>
 
@@ -174,6 +194,7 @@ export const App: React.FC = () => {
         </div>
 
         {/* Collapsible Side Panel */}
+        {extensionsOpen && <ExtensionPanel items={extensions} selected={extensionId} onSelect={setExtensionId} onClose={() => setExtensionsOpen(false)} hidden={isSettingsOpen} loadError={extensionError}/> }
         <SidePanel
           isOpen={sidePanelOpen}
           activeTab={activeTab}

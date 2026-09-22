@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Nova Fixture Panel",
+  "version": "1.0",
+  "permissions": ["sidePanel"],
+  "host_permissions": [],
+  "action": { "default_title": "Open Fixture" },
+  "background": { "service_worker": "background.js" },
+  "side_panel": { "default_path": "panel.html" }
+}

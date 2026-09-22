@@ -6,6 +6,10 @@
 
 เป้าหมายคือทำให้ Browser Nova เปิด HTTP/HTTPS ตรวจเว็บ และทำงานตามคำสั่งภาษาธรรมชาติได้โดยตรวจผลและหยุดได้จริง เริ่มบน macOS แล้วขยาย Windows ใช้ [PLAN.md](PLAN.md) เป็นบริบทผลิตภัณฑ์, [REVIEW.md](REVIEW.md) เป็นรายการข้อบกพร่อง และ [RELEASE.md](RELEASE.md) เป็นเงื่อนไขการเผยแพร่
 
+## ส่วนที่เพิ่มนอก Phase หลัก (22 กันยายน 2026)
+
+0.2.0 เพิ่ม Side Panel Extension Manager แบบจำกัดขอบเขตและทดสอบกับ loopback fixtures แล้ว ดู [EXTENSIONS.md](EXTENSIONS.md) ไม่ใช่การรองรับ Chrome Web Store ทุกตัว และไม่ถือว่า Phase 1 runtime/AI policy gates ด้านล่างผ่านโดยอัตโนมัติ
+
 ## 1. Baseline ที่ตรวจพบ
 
 - มี Electron 34, WebContentsView, CDP Broker, Workflow Runner และ Mock/Gemini/OpenAI adapters; ส่งมอบ macOS Preview 0.1.1 แล้ว
