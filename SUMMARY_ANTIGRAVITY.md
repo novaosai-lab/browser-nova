@@ -1,5 +1,12 @@
 # รายงานสรุปผลการพัฒนา Browser Nova
 
+## 0.3.0 — Bookmarks, saved passwords, Copy cURL (24 September 2026)
+
+Added star-menu bookmark management and an explicit manual password vault using OS encryption (macOS Keychain-backed safeStorage). Saved logins can be filled after native confirmation on an exact matching origin; no automatic login/save detection, cross-origin iframe fill, cloud sync, or plaintext fallback. Trusted-shell-only IPC; listing never returns passwords. Copy cURL emits a shell-escaped command for captured request data, rejects incomplete bodies and never sends the request.
+
+Validation: 71 npm tests (vault codec mocked), 8 real Electron form-fill assertions, 12 network assertions, typecheck and arm64 package build. Actual Keychain/migration remains unverified. Installed local arm64 0.3.0 in Applications with prior app backed up. Ad-hoc signature verified; installed UI shows the star dialog and password form with OS encryption available. No real credentials saved during UI QA. See [LIBRARY.md](LIBRARY.md) for usage, boundaries and limitations. Preview auto-update remains disabled.
+
+
 ## 0.2.1 Preview — macOS distribution helper
 
 Includes the Fetch/XHR inspector and resizable side panel. Adds `scripts/macos/Open-Browser-Nova.command` and Thai installation instructions. The helper only targets `/Applications/Browser Nova.app`, checks its identifier and ad-hoc integrity signature, requires the user to type OPEN, removes quarantine for that app, then opens it. No sudo, global Gatekeeper changes, downloads, automatic execution, or certificate claims.

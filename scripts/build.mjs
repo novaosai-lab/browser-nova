@@ -86,6 +86,8 @@ async function build() {
   });
 
   for (const [name, source] of [
+    ['login-fill-integration', 'tests/e2e/login-fill-integration.ts'],
+    ['library-test', 'tests/unit/library-test.ts'],
     ['network-integration', 'tests/e2e/network-integration.ts'],
     ['extension-test', 'tests/unit/extension-test.ts'],
     ['extension-integration', 'tests/e2e/extension-integration.ts'],

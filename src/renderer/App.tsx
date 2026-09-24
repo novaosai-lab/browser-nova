@@ -1,3 +1,4 @@
+import { LibraryModal } from './components/LibraryModal';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { TabState, SidePanelTab } from '../shared/types';
 import { subscribeToTabState } from './tab-state';
@@ -12,6 +13,7 @@ import { Globe, Puzzle } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [{ tabs, activeTabId }, setTabState] = useState<TabState>({ tabs: [], activeTabId: null });
+  const [libraryOpen, setLibraryOpen] = useState(false);
   const [panelResizing, setPanelResizing] = useState(false);
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
   const [activeSideTab, setActiveSideTab] = useState<SidePanelTab>('ai');
@@ -40,10 +42,10 @@ export const App: React.FC = () => {
     (window as any).nova.layout.updateBounds({
       x: Math.round(rect.left),
       y: Math.round(rect.top),
-      width: isSettingsOpen || panelResizing ? 0 : Math.round(rect.width),
-      height: isSettingsOpen || panelResizing ? 0 : Math.round(rect.height),
+      width: isSettingsOpen || libraryOpen || panelResizing ? 0 : Math.round(rect.width),
+      height: isSettingsOpen || libraryOpen || panelResizing ? 0 : Math.round(rect.height),
     });
-  }, [isSettingsOpen, panelResizing]);
+  }, [isSettingsOpen, libraryOpen, panelResizing]);
 
   // Window resize and panel toggle listener
   useEffect(() => {
@@ -173,6 +175,7 @@ export const App: React.FC = () => {
           onStop={handleStop}
           onOpenDevTools={handleOpenDevTools}
           onToggleSidePanel={handleToggleSidePanel}
+          onOpenLibrary={() => setLibraryOpen(true)}
           onOpenSettings={() => setIsSettingsOpen(true)}
           onOpenExtensions={() => openExtensions()}
           extensionButtons={extensions.filter(e => e.enabled && !e.error).map(ext => <button key={ext.id} className="icon-btn" title={`เปิด ${ext.name}`} onClick={() => openExtensions(ext.id)}><Puzzle size={15}/></button>)}
@@ -197,7 +200,7 @@ export const App: React.FC = () => {
         </div>
 
         {/* Collapsible Side Panel */}
-        {extensionsOpen && <ExtensionPanel items={extensions} selected={extensionId} onSelect={setExtensionId} onClose={() => setExtensionsOpen(false)} hidden={isSettingsOpen} loadError={extensionError}/> }
+        {extensionsOpen && <ExtensionPanel items={extensions} selected={extensionId} onSelect={setExtensionId} onClose={() => setExtensionsOpen(false)} hidden={isSettingsOpen || libraryOpen} loadError={extensionError}/> }
         <SidePanel
           onResizing={setPanelResizing}
           isOpen={sidePanelOpen}
@@ -209,6 +212,7 @@ export const App: React.FC = () => {
         />
       </div>
 
+      {libraryOpen && <LibraryModal tab={activeTab} onClose={() => setLibraryOpen(false)} onNavigate={handleNavigate}/>}
       {/* Settings Modal */}
       <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </div>

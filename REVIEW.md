@@ -88,3 +88,7 @@ Regression checks ใช้โค้ดจริงที่ bundle ชั่ว
 | 5 | Smart Copy export compile ได้และ preview ตรง fixture ก่อนเพิ่ม Clone/Evidence Pack/Asset Collector |
 | 6 | ทดสอบ live provider ด้วย fixture ที่ไม่มีข้อมูลจริง, ทำ packaged smoke test แล้วจึงอัปเดตเอกสารสถานะส่งมอบ |
 เสนอปรับสถานะโปรเจกต์เป็น “ต้นแบบที่ build และ unit/smoke tests ผ่าน; รอแก้ runtime blockers และตรวจ Electron end-to-end” โดยเก็บจำนวน test และขอบเขตที่ทดสอบไว้ชัดเจน ไม่ใช้เปอร์เซ็นต์ความครบของผลิตภัณฑ์แทน test pass rate
+
+## 0.3.0 library boundaries
+
+New library IPC validates the shell sender and main frame, encrypts login records with OS safeStorage, and exposes metadata only. Fill requires a native confirmation and exact-origin/active-tab checks, runs in an isolated world, and does not submit. This does not fix older IPC/AI boundaries elsewhere. Manual vault entry only; actual Keychain and signed migration need validation. Copy cURL may contain captured secrets; it does not execute requests. See [LIBRARY.md](LIBRARY.md).

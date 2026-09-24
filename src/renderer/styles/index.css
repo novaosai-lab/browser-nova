@@ -451,3 +451,12 @@ body {
 .panel-resize-handle:hover,.panel-resize-handle:focus-visible { background:var(--accent-cyan); outline:none; opacity:.65; }
 .side-panel-header { flex-wrap:wrap; gap:6px; }
 .side-panel-content { min-height:0; }
+
+.library-overlay { position:fixed; inset:0; z-index:200; background:#0009; display:flex; align-items:center; justify-content:center; }
+.library-modal { width:min(720px,90vw); max-height:85vh; overflow:auto; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:12px; padding:24px; display:flex; flex-direction:column; gap:14px; }
+.library-modal header { display:flex; align-items:center; justify-content:space-between; }
+.library-modal h2 { margin:0; font-size:18px; }
+.library-modal form,.library-modal label { display:flex; flex-direction:column; gap:8px; }
+.library-modal input { padding:8px; color:var(--text-primary); background:var(--bg-app); border:1px solid var(--border-subtle); border-radius:5px; }
+.library-list article { display:flex; gap:8px; flex-wrap:wrap; padding:12px 0; border-bottom:1px solid var(--border-subtle); overflow-wrap:anywhere; }
+.library-list small { flex-basis:100%; }

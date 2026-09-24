@@ -68,3 +68,7 @@ Side panel: ลากขอบซ้ายเพื่อปรับควา�
 ### macOS 0.2.1 Preview — เปิดบนเครื่องอื่น
 
 ดาวน์โหลด Universal DMG และ helper ZIP จาก [0.2.1 Preview](https://github.com/novaosai-lab/browser-nova/releases/tag/v0.2.1-preview.1). ติดตั้งแอปใน Applications แล้วทำตาม [คู่มือเปิดแอป](scripts/macos/README-OPEN-MAC.md). สคริปต์ให้ผู้ใช้เลือกเอา quarantine ออกเฉพาะแอปนี้ ไม่ใช่การ notarize และยังไม่รับประกันเครื่องที่องค์กรควบคุม
+
+### Bookmarks / Passwords / Copy cURL (0.3.0)
+
+กดดาวข้าง address bar เพื่อบันทึก/ค้นหา Bookmark หรือเลือก Passwords เพื่อบันทึกบัญชีแบบเข้ารหัสด้วยตนเอง และกด Fill บนเว็บ origin เดียวกัน ส่วน Inspect → Network มีปุ่ม Copy cURL สำหรับ request ที่เลือก ดู [คู่มือ](LIBRARY.md)

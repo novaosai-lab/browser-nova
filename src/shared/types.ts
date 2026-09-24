@@ -35,6 +35,7 @@ export interface NetworkRequest {
   requestHeaders?: Record<string, string>;
   responseHeaders?: Record<string, string>;
   postData?: string;
+  requestBodyIncomplete?: boolean;
   responseBody?: string;
   bodyNote?: string;
   completed?: boolean;

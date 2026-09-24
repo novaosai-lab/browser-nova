@@ -1,3 +1,4 @@
+import type { LibraryState } from '../shared/library-types';
 import { contextBridge, ipcRenderer } from 'electron';
 import { IPC_CHANNELS } from '../shared/ipc-channels';
 import { AppSettings, Bounds, Tab, TabState, Workflow } from '../shared/types';
@@ -5,6 +6,13 @@ import type { SideExtension } from '../shared/extension-types';
 import type { UpdateState } from '../shared/update-types';
 
 const novaApi = {
+  library: {
+    state: (): Promise<LibraryState> => ipcRenderer.invoke('library:action', 'state'),
+    bookmark: (title: string, url: string): Promise<LibraryState> => ipcRenderer.invoke('library:action', 'bookmark', {title, url}),
+    saveLogin: (url: string, username: string, password: string): Promise<LibraryState> => ipcRenderer.invoke('library:action', 'saveLogin', {url, username, password}),
+    remove: (kind: 'bookmark' | 'login', id: string): Promise<LibraryState> => ipcRenderer.invoke('library:action', 'remove', {kind, id}),
+    fill: (id: string): Promise<LibraryState> => ipcRenderer.invoke('library:action', 'fill', {id}),
+  },
   extensions: {
     list: (): Promise<SideExtension[]> => ipcRenderer.invoke(IPC_CHANNELS.EXTENSIONS_LIST),
     importFolder: (): Promise<SideExtension | null> => ipcRenderer.invoke(IPC_CHANNELS.EXTENSIONS_IMPORT),

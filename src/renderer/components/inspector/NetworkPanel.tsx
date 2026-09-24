@@ -1,3 +1,4 @@
+import { toCurl } from '../../../shared/curl';
 import React, { useState } from 'react';
 import { NetworkRequest } from '../../../shared/types';
 
@@ -51,6 +52,9 @@ export function NetworkPanel({ requests, onClear }: { requests: NetworkRequest[]
         <button className="secondary-btn" onClick={async () => {
           try { await navigator.clipboard.writeText(content); setCopyState('Copied'); } catch { setCopyState('Copy failed'); }
         }}>{copyState || 'Copy'}</button>
+        <button className="secondary-btn" title="Copy cURL (bash/zsh). Includes captured credentials; does not send a request." onClick={async () => {
+          try { await navigator.clipboard.writeText(toCurl(request)); setCopyState('cURL copied'); } catch (e) { setCopyState(e instanceof Error ? e.message : 'Copy failed'); }
+        }}>Copy cURL</button>
       </div>
       {request.bodyNote && <small>{request.bodyNote}</small>}
       <pre tabIndex={0}>{content}</pre>

@@ -145,6 +145,7 @@ export class CdpBroker {
         id, tabId: this.tabId, url: params.request.url, method: params.request.method,
         resourceType: params.type, requestHeaders: params.request.headers,
         postData: params.request.postData?.slice(0, 65536),
+        requestBodyIncomplete: Boolean((params.request.hasPostData && params.request.postData === undefined) || params.request.postData?.length >= 65536 || /multipart\/form-data/i.test(JSON.stringify(params.request.headers))),
         bodyNote: params.request.hasPostData && !params.request.postData ? 'Request payload unavailable (may include file uploads).' : undefined,
         timestamp: Date.now(), isHttp: params.request.url.startsWith('http://'), status: 0, failed: false,
       };

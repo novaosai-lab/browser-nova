@@ -15,6 +15,7 @@ import {
   Terminal,
   Server,
   Puzzle,
+  Star,
 } from 'lucide-react';
 
 interface AddressBarProps {
@@ -28,6 +29,7 @@ interface AddressBarProps {
   onStop: () => void;
   onOpenDevTools: () => void;
   onToggleSidePanel: (tab?: SidePanelTab) => void;
+  onOpenLibrary: () => void;
   onOpenSettings: () => void;
   onOpenExtensions: () => void;
   extensionButtons: React.ReactNode;
@@ -44,6 +46,7 @@ export const AddressBar: React.FC<AddressBarProps> = ({
   onStop,
   onOpenDevTools,
   onToggleSidePanel,
+  onOpenLibrary,
   onOpenSettings,
   onOpenExtensions,
   extensionButtons,
@@ -166,6 +169,7 @@ export const AddressBar: React.FC<AddressBarProps> = ({
         )}
       </form>
 
+      <button className="icon-btn" onClick={onOpenLibrary} title="Bookmarks & Passwords"><Star size={16}/></button>
       {/* Feature Panel Buttons */}
       <div className="tool-buttons">
         <div className="extension-shortcuts">{extensionButtons}</div>

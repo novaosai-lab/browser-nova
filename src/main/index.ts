@@ -1,3 +1,4 @@
+import { registerLibrary } from './library-ipc';
 import { ExtensionManager } from './extensions/manager';
 import { registerExtensionIpc } from './extensions/ipc';
 import { app, BrowserWindow, shell, Menu } from 'electron';
@@ -204,6 +205,7 @@ async function createWindow() {
     }
   });
 
+  registerLibrary(mainWindow, tabManager, path.join(app.getPath('userData'), 'library'));
   registerIpcHandlers(tabManager, evidence, loadSettings, saveSettings);
 
   const extensionHost = new ExtensionManager(mainWindow, path.join(app.getPath('userData'), 'side-extensions'), () => {

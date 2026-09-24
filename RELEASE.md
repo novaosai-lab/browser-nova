@@ -108,3 +108,9 @@ Resizable-panel local build installed on 22 September 2026. Previous app backed 
 Publish as `v0.2.1-preview.1` (prerelease, no update feed). Use Universal DMG/ZIP/blockmaps plus `Browser-Nova-0.2.1-macOS-open-helper.zip` containing the executable helper and Thai README; hash all five assets into SHA256SUMS. Stage only this version, verify uploaded asset digests, then publish. Do not replace earlier assets.
 
 The helper is an explicit user-run per-app quarantine override, not a certificate or notarization workaround performed automatically by the app. Run via `bash` in Terminal as documented in [the helper guide](scripts/macos/README-OPEN-MAC.md). Users must trust the download; enterprise policy can still block it.
+
+## 0.3.0 local build
+
+Bookmarks, manual encrypted password save/fill and Copy cURL are included in local arm64 builds and CI artifacts. Run `npm run test:logins` in addition to existing checks. Published 0.2.1 assets are unchanged; no new public release or update feed is implied by source sync. Keychain continuity between ad-hoc or signed versions is unverified.
+
+Local 0.3.0 arm64 was installed and launched; signature and star/password UI checked. Previous app backup: `release/backups/Browser Nova-before-library-20260924.app`. No production password or API was used.
